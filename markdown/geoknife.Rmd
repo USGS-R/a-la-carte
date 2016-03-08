@@ -1,0 +1,91 @@
+---
+title: "dataRetrival Tutorial"
+author: "<b>USGS</b>: Jordan S Read"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'test';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file='../geoknife.html') })
+output:
+  ioslides_presentation:
+    css: ../styles.css
+    logo: ../images/simple-shadow.png
+    smaller: yes
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+
+What is `geoknife`?
+
+* R-package to get climate data into R
+
+Where does the data come from?
+
+* US Geological Survey
+    + Climate and Land Use mission
+* NASA
+    + NLDAS, GLDAS, various
+    + more being added....
+* Academia
+    + E.g., PRISM
+
+What does `geoknife` do to the data?
+
+* 
+
+How to discover data?
+
+* Examples will be provided
+
+
+
+## Overview
+
+
+## NWIS Overview (US Geological Survey water data)
+
+* Unit Data
+    + "Real-time" data
+    + Available data from 2007 (big improvement from 120 days!)
+  
+* Daily Data
+    + Data aggregated from the unit data to a daily statistic
+    + This data can go back many decades
+    
+* Discrete Data
+    + Water quality data
+    + Groundwater level
+    + Rating curves
+    + Surfacewater measurements
+    
+* Meta Data
+    + Site information
+    + Parameter information
+
+## NWIS Links
+More information:
+
+[Water Services](http://waterservices.usgs.gov/)
+
+[Help](http://help.waterdata.usgs.gov/)
+
+## Water Quality Portal
+[Water Quality Portal](http://www.waterqualitydata.us/)
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
