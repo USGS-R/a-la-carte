@@ -22,15 +22,26 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Introduction
 
 What is `geoknife`?
-
-<img src="images/geoknife.png" alt="geoknife" style="width: 200px;"/>
+<p align="center">
+  <img src="images/geoknife.png" alt="geoknife" style="width: 300px;" align="center"/>
+</p>
 
 * R-package to get climate data into R
 
-The **geoknife** package was created to support web-based geoprocessing of large gridded datasets according to their overlap with landscape (or aquatic/ocean) features that are often irregularly shaped. geoknife creates data access and subsequent geoprocessing requests for the USGS's Geo Data Portal to carry out on a web server. 
+The `geoknife` package was created to support web-based geoprocessing of large gridded datasets according to their overlap with landscape (or aquatic/ocean) features that are often irregularly shaped. geoknife creates data access and subsequent geoprocessing requests for the USGS's Geo Data Portal to carry out on a web server. 
 
-geoknife: 1) allows the user to avoid downloading large datasets, 2) avoids reinventing the wheel for the creation and optimization of complex geoprocessing algorithms, and 3) uses computing resources that are dedicated elsewhere, so geoknife operations do not have much of an impact on a local computer.
+`geoknife`: 
+ 
+* allows the user to avoid downloading large datasets
+* avoids reinventing the wheel for the creation and optimization of complex geoprocessing algorithms
+* uses computing resources that are dedicated elsewhere, so geoknife operations do not have much of an impact on a local computer
 
+## Introduction
+
+read more about `geoknife`:  
+<p align="center">
+  <a href="http://onlinelibrary.wiley.com/doi/10.1111/ecog.01880/full"><img src="images/ecography_geoknife.png" alt="geoknife" align="center"/>/></a>
+</p>
 ## Introduction
 
 Where does the data come from?
