@@ -1,0 +1,127 @@
+---
+title: "Data Best Practices"
+author: "<b>USGS</b>: Alison P Appling"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'test';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file='../best_practices.html') })
+output: 
+  ioslides_presentation: 
+    css: ../styles.css
+    logo: ../images/simple-shadow.png
+    smaller: yes
+    transition: faster
+---
+
+```{r directive, include=FALSE}
+# acquisition and management of large datasets as well as quality control. Your
+# expertise in these topics is really beneficial to the group since we will be
+# dedicating a considerable amount of time finding/curating datasets.  Would you
+# be willing to share some techniques/best practices with the group during part
+# of the webinar on Thursday 3/10? The idea is to provide some exposure to
+# helpful approaches to data management as we move forward refining group
+# research questions.
+
+# Reproducible workflows
+# Reproducible data access
+# Reproducible modeling
+```
+
+```{r Greg_Wilson_notes, include=FALSE}
+# productivity sells training
+# scaring people w/ having to retract paper b/c of error doesn't sell
+# skills: task automation (bash), tracking/sharing code (Git), re-use (scripting), data management (SQL)
+```
+
+## Upping your Analytical Game
+
+### Goals
+
+- Efficiency - you can develop, revise, and revisit your code
+- Transparency - others can see & understand what you're doing
+- Reproducibility - someone else can run your analyses
+- Reproducible Research - integrated data, text, code, and results
+
+## Why reproducibility
+
+- do each thing just once
+- add/change data
+- add/change methods
+- run on clusters/cloud
+- share with others
+- share with your future self - paper revisions, check an analysis step, reuse code in a new project
+
+## What makes work reproducible?
+
+- self-contained project, public dependencies
+- traceable data flow, ideally automated
+- readable code
+
+## Reproducible workflows
+
+- an undocumented system is no system
+- redundancy is great for data storage, horrible for data analysis
+- cache intermediate data for iteration
+- prepare for evolution of the workflow - trunk vs branch
+- remake, make
+
+## Reproducible workflows
+
+<p align="center">
+  <img src="images/remake_JR.png" alt="geoknife" style="width: 600px;" align="center"/>
+</p>
+
+## Reproducible data access
+
+- know your data's provenance
+- script your data access
+  - `download.file()`
+  - `httr::GET()`
+  - [geoknife](https://github.com/USGS-R/geoknife)
+  - [dataRetrieval](https://github.com/USGS-R/dataRetrieval)
+  - [dataone](https://github.com/DataONEorg/rdataone), etc.
+- cache a copy, but know it's fleeting
+
+## Reproducible modeling
+
+- separate the model from the model manager
+- cache intermediate data
+- create model run metadata; prefer tables, text, and png to pdf for quick review
+- store everything until you can't
+- expect obsolescence, so save long-lived artifacts if they'll be needed
+
+## Readability
+
+- code comments
+- meaningful variable names
+- meaningful white space
+- clarity via conciseness
+- decomposition (modularity)
+- don't repeat yourself (DRY)
+
+## GitHub
+
+- collaboration - share files, manage conflicts
+- task management - list and discuss issues, link to code & changes
+  - (waffle & trello - prioritize issues)
+- code versioning - document changes, option to revert or checkout
+- open research is possible
+
+## Quality assessment
+
+- even highly curated data have flaws
+- check your n's - nrow, nunique
+- check for outliers
+- check for duplicates
+- preserve 'raw' data
+- script your corrections
+
+## Fisheries dataset
+
+http://www.umesc.usgs.gov/data_library/fisheries/fish1_query.shtml
+
+http://www.umesc.usgs.gov/data_library/fisheries/LTRM_FISH_DATA_ENTIRE.zip
+
+## Summary

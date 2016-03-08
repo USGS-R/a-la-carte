@@ -1,6 +1,7 @@
-# a-la-carte
-a la carte tools
+# OWI a-la-carte instructional material
 
-markdown works
+View at http://usgs-r.github.io/a-la-carte
 
-## header
+- Presentation .html files go in the top-level directory.
+- Presentation-generating scripts go in the **markdown** folder.
+- Images go in **images**.
