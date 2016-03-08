@@ -12,7 +12,6 @@ output:
     css: ../styles.css
     logo: ../images/simple-shadow.png
     smaller: yes
-    widescreen: yes
 ---
 
 ```{r setup, include=FALSE}
