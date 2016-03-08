@@ -239,13 +239,29 @@ url <- attr(yahara, "url")
 
 ##  Explore Data (cont.)
 
-```{r echo=TRUE, eval=TRUE}
+```{r echo=TRUE, eval=TRUE, fig.height=3.5}
 library(ggplot2)
 ts <- ggplot(yahara,
              aes(dateTime, GH_Inst)) +
       geom_line()
 ts
 ```
+    
+##  Use attributes for metadata:
+
+
+```{r echo=TRUE, eval=TRUE, fig.height=3.5}
+parameterInfo <- attr(yahara, "variableInfo")
+siteInfo <- attr(yahara, "siteInfo")
+  
+ts <- ts +
+      xlab("") +
+      ylab(parameterInfo$parameter_desc) +
+      ggtitle(siteInfo$station_nm)
+ts
+```
+
+    
     
 ## Water Quality Portal
 

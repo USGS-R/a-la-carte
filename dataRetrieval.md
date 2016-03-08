@@ -277,6 +277,25 @@ ts
 
 ![](..\dataRetrieval_files/figure-html/unnamed-chunk-16-1.png)
     
+##  Use attributes for metadata:
+
+
+
+```r
+parameterInfo <- attr(yahara, "variableInfo")
+siteInfo <- attr(yahara, "siteInfo")
+  
+ts <- ts +
+      xlab("") +
+      ylab(parameterInfo$parameter_desc) +
+      ggtitle(siteInfo$station_nm)
+ts
+```
+
+![](..\dataRetrieval_files/figure-html/unnamed-chunk-17-1.png)
+
+    
+    
 ## Water Quality Portal
 
 [Water Quality Portal](http://www.waterqualitydata.us/)
