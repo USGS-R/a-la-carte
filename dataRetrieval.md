@@ -173,8 +173,15 @@ yahara <- readNWISuv(siteNumbers = siteNo,
                      parameterCd = pCode,
                      startDate = start.date,
                      endDate = end.date)
-  
-names(yahara)  
+```
+
+## USGS Basic Web Retrievals: renameNWISColumns
+
+From the Yahara example, let's look at the data. The column names are:
+
+
+```r
+names(yahara)
 ```
 
 ```
@@ -182,11 +189,118 @@ names(yahara)
 ## [4] "X_00065_00011"    "X_00065_00011_cd" "tz_cd"
 ```
 
+
+The names of the columns are based on the parameter and statistic codes. In many cases, you can clean up the names with a convenience function renameNWISColumns:
+
+
+```r
+yahara <- renameNWISColumns(yahara)
+names(yahara)
+```
+
+```
+## [1] "agency_cd"  "site_no"    "dateTime"   "GH_Inst"    "GH_Inst_cd"
+## [6] "tz_cd"
+```
+
+## Explore Data
+
+
+```r
+head(yahara)
+```
+
+```
+##   agency_cd  site_no            dateTime GH_Inst GH_Inst_cd tz_cd
+## 1      USGS 05428000 2014-10-01 05:00:00    9.96          A   UTC
+## 2      USGS 05428000 2014-10-01 05:15:00    9.95          A   UTC
+## 3      USGS 05428000 2014-10-01 05:30:00    9.95          A   UTC
+## 4      USGS 05428000 2014-10-01 05:45:00    9.96          A   UTC
+## 5      USGS 05428000 2014-10-01 06:00:00    9.96          A   UTC
+## 6      USGS 05428000 2014-10-01 06:15:00    9.97          A   UTC
+```
+
+The data is returned as a data frame with 5 columns:
+
+---------------------
+ Column Name   Type  
+------------- -------
+  agency_cd     chr  
+
+   site_no      chr  
+
+  dateTime    POSIXct
+
+   GH_Inst      num  
+
+ GH_Inst_cd     chr  
+
+    tz_cd       chr  
+---------------------
+  
+## Explore Data (cont.)
+
+The returned data also has several attributes attached to the data frame. To see what the attributes are:
+
+
+```r
+names(attributes(yahara))
+```
+
+```
+## [1] "names"         "row.names"     "class"         "url"          
+## [5] "siteInfo"      "variableInfo"  "disclaimer"    "statisticInfo"
+## [9] "queryTime"
+```
+
+Each `dataRetrieval` return should have the attributes url, siteInfo, and variableInfo. Additional attributes are available depending on the data.
+
+To access the attributes:
+
+
+```r
+url <- attr(yahara, "url")
+```
+
+[Raw Data](http://nwis.waterservices.usgs.gov/nwis/iv/?site=05428000&format=waterml,1.1&ParameterCd=00065&startDT=2014-10-01&endDT=2015-09-30)
+
+##  Explore Data (cont.)
+
+
+```r
+library(ggplot2)
+ts <- ggplot(yahara,
+             aes(dateTime, GH_Inst)) +
+      geom_line()
+ts
+```
+
+![](..\dataRetrieval_files/figure-html/unnamed-chunk-16-1.png)
+    
+##  Use attributes for metadata:
+
+
+
+```r
+parameterInfo <- attr(yahara, "variableInfo")
+siteInfo <- attr(yahara, "siteInfo")
+  
+ts <- ts +
+      xlab("") +
+      ylab(parameterInfo$parameter_desc) +
+      ggtitle(siteInfo$station_nm)
+ts
+```
+
+![](..\dataRetrieval_files/figure-html/unnamed-chunk-17-1.png)
+
+    
     
 ## Water Quality Portal
 
 [Water Quality Portal](http://www.waterqualitydata.us/)
 
+<img src="../images/WQP.png" alt="Overview" style="width: 300px;"/>
 
 
 ## More information:
