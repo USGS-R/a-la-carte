@@ -1,0 +1,81 @@
+---
+title: "GLM, glmtools, GLMr Tutorial"
+author: "<b>USGS</b>: Jordan S Read, Luke A Winslow"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'test';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file='../glmtools.html') })
+output:
+  ioslides_presentation:
+    css: ../styles.css
+    logo: ../images/simple-shadow.png
+    smaller: yes
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+Goals for Part II of today's workshop 
+
+* **GLM**: basic understanding of lake model
+* **GLMr**: run GLM from R, keep up-to-date version 
+* **glmtools**: reproducible model results handling and visualizations
+* **What's next?**: linking lake models to catchment hydrology
+
+## Lake modeling overview
+![lake schematic](images/lake_schematic.png)
+
+## Lake modeling overview
+![model output](images/test_figure.png)
+
+
+## GLM
+<div class="indent large">GLM "General Lake Model"</div>
+<div class="indent large">Authors: Matthew R Hipsey, Louise C Bruce, David P Hamilton</div>
+<div class="indent large">Location: <a target="_blank" title="GLM website" href="http://aed.see.uwa.edu.au/research/models/GLM/">http://aed.see.uwa.edu.au/research/models/GLM/</a></div>
+
+The GLM model has been developed as an initiative of the Global Lake Ecological Observatory Network (GLEON) and in collaboration with the Aquatic Ecosystem Modelling Network (AEMON) that started in 2010. The model was first introduced in Leipzig at the 2nd Lake Ecosystem Modelling Symposium in 2012, and has since developed rapidly with application to numerous lakes within the GLEON network and beyond.
+
+Source code available at
+http://github.com/GLEON/GLM-source
+
+## GLM overview
+![model output](images/GLM_Diagram_lowres.jpg)
+
+## GLM overview
+![glm directory](images/glm_dir.png)
+
+## GLM overview
+![simulation directory](images/sim_dir.png)
+![files for GLM](images/nml_drivers.png)
+
+## GLM overview
+![created by GLM](images/sim_out.png)
+
+## GLMr
+
+<div class="indent large">GLMr R package</div>
+<div class="indent large">Maintainer: Luke A Winslow  </div>
+<div class="indent large">Authors: Luke A Winslow, Jordan S Read  </div>
+<div class="indent large">Location: <a target="_blank" title="glmtools on github" href="https://github.com/GLEON/GLMr">https://github.com/GLEON/GLMr</a></div>
+
+GLMr holds the current version of the "General Lake Model",  
+and can run the model on all platforms (windows, mac, linux)
+directly from R
+
+## GLMr
+
+<div style="text-align: center; width: 100%;"><span class=large>GLMr Code in R:</span></div>
+
+```{r, eval=TRUE}
+library(GLMr) 
+
+glm_version()
+
+nml_template_path()
+```
