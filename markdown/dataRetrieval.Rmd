@@ -182,16 +182,76 @@ yahara <- readNWISuv(siteNumbers = siteNo,
                      parameterCd = pCode,
                      startDate = start.date,
                      endDate = end.date)
-  
-names(yahara)  
-  
+
 ```
 
+## USGS Basic Web Retrievals: renameNWISColumns
+
+From the Yahara example, let's look at the data. The column names are:
+
+```{r echo=TRUE, eval=TRUE}
+names(yahara)
+```
+
+
+The names of the columns are based on the parameter and statistic codes. In many cases, you can clean up the names with a convenience function renameNWISColumns:
+
+```{r echo=TRUE, eval=TRUE}
+yahara <- renameNWISColumns(yahara)
+names(yahara)
+```
+
+## Explore Data
+
+```{r echo=TRUE, eval=TRUE}
+head(yahara)
+```
+
+The data is returned as a data frame with 5 columns:
+```{r echo=FALSE, eval=TRUE}
+df <- data.frame(pCode = names(yahara),
+                 shName = c("chr","chr","POSIXct","num","chr","chr"))
+
+names(df) <- c("Column Name", "Type")
+
+pander(df)
+
+```
+  
+## Explore Data (cont.)
+
+The returned data also has several attributes attached to the data frame. To see what the attributes are:
+
+```{r echo=TRUE, eval=TRUE}
+names(attributes(yahara))
+
+```
+
+Each `dataRetrieval` return should have the attributes url, siteInfo, and variableInfo. Additional attributes are available depending on the data.
+
+To access the attributes:
+
+```{r echo=TRUE, eval=TRUE}
+url <- attr(yahara, "url")
+```
+
+[Raw Data](`r url`)
+
+##  Explore Data (cont.)
+
+```{r echo=TRUE, eval=TRUE}
+library(ggplot2)
+ts <- ggplot(yahara,
+             aes(dateTime, GH_Inst)) +
+      geom_line()
+ts
+```
     
 ## Water Quality Portal
 
 [Water Quality Portal](http://www.waterqualitydata.us/)
 
+<img src="../images/WQP.png" alt="Overview" style="width: 300px;"/>
 
 
 ## More information:
