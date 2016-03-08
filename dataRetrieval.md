@@ -1,17 +1,8 @@
----
-title: "dataRetrival Tutorial"
-author: "<b>USGS</b>: Laura DeCicco"
-date: "March 7, 2016"
-output:
-  ioslides_presentation:
-    smaller: yes
-    css: styles.css 
-    logo: images/simple-shadow.png
----
+# dataRetrival Tutorial
+<b>USGS</b>: Laura DeCicco  
+`r format(Sys.time(), '%d %B, %Y')`  
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
+
 
 ## Introduction
 
@@ -40,19 +31,21 @@ How to discover data?
 
 
 ## Overview
-<img src="images/2015-12-15_13-52-29.png" alt="Overview" style="width: 800px;"/>
+<img src="../images/2015-12-15_13-52-29.png" alt="Overview" style="width: 800px;"/>
 
 ## Installation
 
 `dataRetrieval` is available on the CRAN repository. The CRAN version is the most stable and user-tested:
 
-```{r echo=TRUE, eval=FALSE}
+
+```r
 install.packages("dataRetrieval")
 ```
 
 Bug fixes and feature upgrades are vetted through a version of `dataRetrival` that is available on a USGS-maintained R repository. To install from that repository:
 
-```{r echo=TRUE, eval=FALSE}
+
+```r
 install.packages("dataRetrieval", 
                  repos=c("http://owi.usgs.gov/R",
                          getOption("repos")))
@@ -62,7 +55,8 @@ More information can be found [here](http://owi.usgs.gov/R/gran.html).
 
 Finally, the absolute cutting-edge version of `dataRetrival` can be installed using the `devtools` package which pulls from GitHub:
 
-```{r echo=TRUE, eval=FALSE}
+
+```r
 library(devtools)
 install_github("USGS-R/dataRetrieval")
 ```
@@ -71,19 +65,22 @@ install_github("USGS-R/dataRetrieval")
 
 Once the `dataRetrieval` package has been installed, it needs to be loaded in order to use any of the functions:
 
-```{r echo=TRUE, eval=TRUE}
+
+```r
 library(dataRetrieval)
 ```
 
 There is a vignette that covers the full scope of the `dataRetrieval` package. It can be accessed with the following command:
 
-```{r echo=TRUE, eval=FALSE}
+
+```r
 vignette("dataRetrieval",package = "dataRetrieval")
 ```
 
 Additionally, each function has a help file. These can be accessed by typing a question mark, followed by the function name in the R console:
 
-```{r echo=TRUE, eval=FALSE}
+
+```r
 ?readNWISuv
 ```
 
@@ -129,31 +126,31 @@ The USGS uses various codes for basic retrievals
 Here are some examples of common codes:
 <div class="columns-2">
 
-```{r echo=FALSE, eval=TRUE}
-library(knitr)
-library(pander)
 
-df <- data.frame(pCode = c("00060","00065","00010","00400"),
-                 shName = c("Discharge","Gage Height","Temperature","pH"))
+------------------------------
+ Parameter Codes   Short Name 
+----------------- ------------
+      00060        Discharge  
 
-names(df) <- c("Parameter Codes", "Short Name")
+      00065       Gage Height 
 
-pander(df)
+      00010       Temperature 
 
-```
+      00400            pH     
+------------------------------
 
-```{r echo=FALSE, eval=TRUE}
-library(knitr)
-library(pander)
 
-df <- data.frame(pCode = c("00001","00002","00003","00008"),
-                 shName = c("Maximum","Minimum","Mean","Median"))
+------------------------------
+ Statistic Codes   Short Name 
+----------------- ------------
+      00001         Maximum   
 
-names(df) <- c("Statistic Codes", "Short Name")
+      00002         Minimum   
 
-pander(df)
+      00003           Mean    
 
-```
+      00008          Median   
+------------------------------
 
 </div>
 
@@ -165,7 +162,8 @@ Following those basic examples, more complicated queries using `dataRetrival`'s 
 
 Knowing a site number (or site numbers), paremeter code (or codes), and start and end date. Let's start by asking for gage height (parameter code = 00065) data for Lake Mendota at Madison, WI (right off Tenney Park on the Yahara River). 
 
-```{r echo=TRUE, eval=TRUE}
+
+```r
 siteNo <- "05428000"
 pCode <- "00065"
 start.date <- "2014-10-01"
@@ -177,7 +175,11 @@ yahara <- readNWISuv(siteNumbers = siteNo,
                      endDate = end.date)
   
 names(yahara)  
-  
+```
+
+```
+## [1] "agency_cd"        "site_no"          "dateTime"        
+## [4] "X_00065_00011"    "X_00065_00011_cd" "tz_cd"
 ```
 
     
