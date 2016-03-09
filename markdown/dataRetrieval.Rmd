@@ -391,7 +391,8 @@ gp <- ggplot(longMulti,
              aes(dateTime, value, color=site_no)) +
   geom_line(size=1.5) + xlab("") + ylab("") +
   facet_grid(variable ~ .,scales= "free") + 
-  theme(legend.title=element_blank())
+  theme(legend.title=element_blank(),
+        legend.position='bottom',legend.direction = "vertical")
 gp
 
 ```
@@ -400,7 +401,7 @@ gp
 
 To demonstrate the power of `tidyr` + `dplyr` + `ggplot2` + `dataRetrieval`:
 
-```{r echo=FALSE, eval=TRUE, fig.height=6, warning=FALSE}
+```{r echo=FALSE, eval=TRUE, warning=FALSE, fig.height=6}
 sites <- c("05427850","05427718","05428000","05427880") 
 pCodes <- c("00060","00010","00055","00065") 
 
@@ -421,7 +422,8 @@ gp <- ggplot(longMulti,
              aes(dateTime, value, color=site_no)) +
   geom_line(size=1.5) + xlab("") + ylab("") +
   facet_grid(variable ~ .,scales= "free") + 
-  theme(legend.title=element_blank())
+  theme(legend.title=element_blank(),
+        legend.position='bottom',legend.direction = "vertical")
 gp
 
 ```
@@ -516,11 +518,25 @@ meas <- readNWISdata(state_cd="WI",service="measurements",format="rdb_expanded")
 
 ```
     
-## Water Quality Portal
+## Water Quality Portal (WQP)
 
 [Water Quality Portal](http://www.waterqualitydata.us/)
 
+<div class="columns-2">
+
+* Multiple agencies
+    + USGS data comes from the NWIS database
+    + EPA data comes from the STORET database (this includes many state and tribal organizations)
+
+* WQP brings data from all these oranizations together and provides it in a single format
+
+* Much more verbose output than NWIS
+
+* To get non-NWIS data, need to use CharacteristicName instead of parameter code.
+
 <img src="../images/WQP.png" alt="Overview" style="width: 300px;"/>
+
+</div>
 
 ## Water Quality Portal Advise
 
