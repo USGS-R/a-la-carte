@@ -21,12 +21,11 @@ library(glmtools)
 ```
 
 ## Introduction
-Goals for Part II of today's workshop 
+Goals for today's workshop 
 
 * **GLM**: basic understanding of lake model
-* **GLMr**: run GLM from R, keep up-to-date version 
+* **GLMr**: run GLM from R, keep up-to-date version of **GLM**
 * **glmtools**: reproducible model results handling and visualizations
-* **What's next?**: linking lake models to catchment hydrology
 
 ## Lake modeling overview
 <p align="center">
