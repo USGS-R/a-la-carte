@@ -15,7 +15,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-options(width=60)
+options(width=65)
 knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)
 library(geoknife)
 gconfig(wps.url='http://cida-test.er.usgs.gov/gdp/process/WebProcessingService')
@@ -343,11 +343,11 @@ july.idx <- months(sst$DateTime) == 'July'
 plot(sst$DateTime[july.idx], sst$caspian.sea[july.idx], type='l', 
      lwd=2, col='dodgerblue', ylab='Sea Surface Temperature (degC)',xlab=NA)
 ```
-```{r, echo=FALSE, fig.height=3, fig.width=8}
+```{r, echo=FALSE, fig.height=2.8, fig.width=8}
 load(system.file('extdata', 'sst_result.RData', package = 'geoknife'))
 head(sst, 2)
 july.idx <- months(sst$DateTime) == 'July'
-par(mar=c(2,4,.5,.5))
+par(mar=c(2,4,0,0))
 plot(sst$DateTime[july.idx], sst$caspian.sea[july.idx], type='l', lwd=2, col='dodgerblue', ylab='Sea Surface Temperature (degC)',xlab=NA)
 ```
 
@@ -371,5 +371,5 @@ And plotting time series data:
 
 ## geoknife for the script averse
 <p align="center">
-  <a href="http://cida.usgs.gov/gdp/"><img src="../images/GDP_screen.png" alt="Geo Data Portal" align="center"/></a>
+  <a href="http://cida.usgs.gov/gdp/"><img src="../images/GDP_screen.png" alt="Geo Data Portal" align="center" width="90%"/></a>
 </p>
