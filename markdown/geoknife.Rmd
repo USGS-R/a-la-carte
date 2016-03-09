@@ -347,7 +347,7 @@ plot(sst$DateTime[july.idx], sst$caspian.sea[july.idx], type='l',
 load(system.file('extdata', 'sst_result.RData', package = 'geoknife'))
 head(sst, 2)
 july.idx <- months(sst$DateTime) == 'July'
-par(mar=c(2,4,0,0))
+par(mar=c(2,4,.3,.1))
 plot(sst$DateTime[july.idx], sst$caspian.sea[july.idx], type='l', lwd=2, col='dodgerblue', ylab='Sea Surface Temperature (degC)',xlab=NA)
 ```
 
