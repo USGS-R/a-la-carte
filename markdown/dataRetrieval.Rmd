@@ -149,16 +149,12 @@ pander(df)
 ```
 
 ```{r echo=FALSE, eval=TRUE}
-library(knitr)
-library(pander)
-
 df <- data.frame(pCode = c("00001","00002","00003","00008"),
                  shName = c("Maximum","Minimum","Mean","Median"))
 
 names(df) <- c("Statistic Codes", "Short Name")
 
 pander(df)
-
 ```
 
 </div>
@@ -494,6 +490,32 @@ leaflet() %>%
 ```
 
     
+##  More readNWISdata examples     
+    
+```{r eval=FALSE, echo=TRUE}
+
+dataTemp <- readNWISdata(stateCd="OH", parameterCd="00010", service="dv")
+
+instFlow <- readNWISdata(sites="05114000", service="iv", 
+                   parameterCd="00060", 
+                   startDate="2014-05-01T00:00Z",endDate="2014-05-01T12:00Z")
+                                                   
+instFlowCDT <- readNWISdata(sites="05114000", service="iv", 
+                   parameterCd="00060", 
+                   startDate="2014-05-01T00:00",endDate="2014-05-01T12:00",
+                   tz="America/Chicago")
+
+bBoxEx <- readNWISdata(bBox=c(-83,36.5,-81,38.5), parameterCd="00010")
+
+waterYear <- readNWISdata(bBox=c(-83,36.5,-81,38.5), parameterCd="00010", 
+                  service="dv", startDate="2013-10-01", endDate="2014-09-30")
+
+wiGWL <- readNWISdata(stateCd="WI",service="gwlevels")
+meas <- readNWISdata(state_cd="WI",service="measurements",format="rdb_expanded")
+
+
+```
+    
 ## Water Quality Portal
 
 [Water Quality Portal](http://www.waterqualitydata.us/)
@@ -509,6 +531,32 @@ Check the website for new features!
 
 
 ##  Time/Time zone discussion
+
+* The arguments for all `dataRetrieval` functions concerning dates (startDate, endDate) can be R Date objects, or character strings, as long as the string is in the form "YYYY-MM-DD"
+
+* In R, one vector (or column in a data frame) can only have __ONE__ timezone attribute
+    + Sometimes in a single state, some sites will acknowledge daylight savings and some don't
+    + `dataRetrival` queries could easily span timezones    
+
+* Therefore, `dataRetrieval` converts all date/times to UTC.
+
+* The user can specify a single timezone to override UTC. The allowable tz arguments are listed on the next slide
+
+## Allowable timezones
+
+```{r echo=FALSE, eval=TRUE}
+df <- data.frame(tz = c("America/New_York","America/Chicago","America/Denver",
+                        "America/Los_Angeles","America/Anchorage","America/Honolulu",
+                        "America/Jamaica","America/Managua","America/Phoenix", "America/Metlakatla"),
+                 Name = c("Eastern Time","Central Time","Mountain Time","Pacific Time",
+                          "Alaska Time","Hawaii Time","Eastern Standard Time(year-round)","Central Standard Time (year-round)","Mountain Standard Time(year-round)","Pacific Standard Time(year-round"),
+                 UTC_offset = c("-05:00","-06:00","-07:00","-08:00","-09:00","-10:00","-05:00","-06:00","-07:00","-08:00"),
+                 UTC_DST = c("-04:00","-05:00","-06:00","-07:00","-08:00","-09:00","-05:00","-06:00","-07:00","-08:00"))
+
+
+
+pander(df)
+```
 
 
 ## Verbose and Progress
