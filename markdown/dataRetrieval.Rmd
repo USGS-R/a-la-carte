@@ -346,15 +346,30 @@ box()
 
 ## Multiple site and parameters (cont.)
 
-ggplot2
+ggplot2: Reshape data from "wide" to "long" first using `tidyr` package.
+
+```{r echo=TRUE, eval=TRUE, message=FALSE}
+library(tidyr)
+library(dplyr)
+multi.data <- select(multi, site_no, dateTime, Wtemp_Inst, Flow_Inst)
+head(multi.data)
+
+longMulti <- gather(multi.data, variable, value, -site_no, -dateTime)
+head(longMulti)
+```
+
+
+## Multiple site and parameters (cont.)
+
+ggplot2: Reshape data from "wide" to "long" first using `tidyr` package.
 
 ```{r echo=TRUE, eval=TRUE, fig.height=4}
 
-p <- ggplot(multi, aes(dateTime, Flow_Inst, colour=site_no)) +
-  geom_line() 
-
-q <- ggplot(multi, aes(dateTime, Wtemp_Inst, colour=site_no)) +
-  geom_line() 
+gp <- ggplot(longMulti, 
+             aes(dateTime, value, color=site_no)) +
+  geom_line() +
+  facet_grid(variable ~ .,scales= "free")
+gp
 
 ```
 
