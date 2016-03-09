@@ -1,0 +1,28 @@
+---
+title: "NHD+"
+author: "<b>USGS</b>: Emily K Read"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'test';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file='../nhd_plus.html') })
+output:
+  ioslides_presentation:
+    css: ../styles.css
+    logo: ../images/simple-shadow.png
+    smaller: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+
+NHD is a thing
+
+## new slide
+
+here is a pic
+![model output](images/GLM_Diagram_lowres.jpg)
