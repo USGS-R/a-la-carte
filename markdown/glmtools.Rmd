@@ -67,6 +67,18 @@ GLMr holds the current version of the "General Lake Model",
 and can run the model on all platforms (windows, mac, linux)
 directly from R
 
+## Installation
+
+`glmtools` is available on the GRAN repository. 
+
+```{r echo=TRUE, eval=FALSE}
+install.packages(c("GLMr", "glmtools"), 
+                 repos=c("http://owi.usgs.gov/R",
+                         getOption("repos")))
+```
+
+More information can be found [here](http://owi.usgs.gov/R/gran.html).
+
 ## GLMr {.smaller .columns-2}
 
 GLMr Code in R:

@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 What is `geoknife`?
 <p align="center">
-  <img src="images/geoknife.png" alt="geoknife" style="width: 300px;" align="center"/>
+  <img src="../images/geoknife.png" alt="geoknife" style="width: 300px;" align="center"/>
 </p>
 
 * R-package to get climate data into R
@@ -39,7 +39,7 @@ The `geoknife` package was created to support web-based geoprocessing of large g
 
 read more about `geoknife`:  
 <p align="center">
-  <a href="http://onlinelibrary.wiley.com/doi/10.1111/ecog.01880/full"><img src="images/ecography_geoknife.png" alt="geoknife" align="center"/></a>
+  <a href="http://onlinelibrary.wiley.com/doi/10.1111/ecog.01880/full"><img src="../images/ecography_geoknife.png" alt="geoknife" align="center"/></a>
 </p>
 ## Introduction
 
