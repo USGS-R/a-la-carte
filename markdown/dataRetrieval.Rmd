@@ -276,12 +276,149 @@ dd <- ggplot(daily, aes(Date,Flow)) +
 dd
 ```
     
+## Multiple site and parameters
+
+The NWIS functions can be used to get multiple sites and multiple parameters in one call.
+
+```{r echo=TRUE, eval=TRUE}
+sites <- c("05427850","05427718") # 2 stations on Yahara
+pCodes <- c("00060","00010") #Temperature and discharge
+
+multi <- readNWISuv(sites,pCodes, "2016-03-01","2016-03-08")
+multi <- renameNWISColumns(multi)
+
+names(multi)
+
+variableInfo <- attr(multi, "variableInfo")
+siteInfo <- attr(multi, "siteInfo")
+
+```
+
+## Multiple site and parameters (cont.)
+
+Base R plots:
+
+```{r echo=TRUE, eval=FALSE}
+par(mfcol=c(2,1),oma=c(2,1,1,1), mar=c(1,4,0.1,0.1))
+
+site1 <- multi[multi$site_no == sites[1],]
+site2 <- multi[multi$site_no == sites[2],]
+plot(site1$dateTime, site1$Flow_Inst, type="l",col="red",
+     xlab = "",xaxt="n",
+     ylab=variableInfo$param_units[variableInfo$parameterCd == "00060"])
+
+lines(site2$dateTime, site2$Flow_Inst)
+plot(site1$dateTime, site1$Wtemp_Inst, type="l",col="red",
+     xlab = "", 
+     ylab=variableInfo$param_units[variableInfo$parameterCd == "00010"])
+lines(site2$dateTime, site2$Wtemp_Inst)
+legend("topleft", legend = siteInfo$site_no, 
+       cex=0.75, col = c("red","black"),lwd = 1)
+box()
+
+
+```
+
+## Multiple site and parameters (cont.)
+
+Base R plots:
+
+```{r echo=FALSE, eval=TRUE}
+par(mfcol=c(2,1),oma=c(2,1,1,1), mar=c(1,4,0.1,0.1))
+
+site1 <- multi[multi$site_no == sites[1],]
+site2 <- multi[multi$site_no == sites[2],]
+plot(site1$dateTime, site1$Flow_Inst, type="l",col="red",
+     xlab = "",xaxt="n",
+     ylab=variableInfo$param_units[variableInfo$parameterCd == "00060"])
+
+lines(site2$dateTime, site2$Flow_Inst)
+plot(site1$dateTime, site1$Wtemp_Inst, type="l",col="red",
+     xlab = "", 
+     ylab=variableInfo$param_units[variableInfo$parameterCd == "00010"])
+lines(site2$dateTime, site2$Wtemp_Inst)
+legend("topleft", legend = siteInfo$site_no, 
+       cex=0.75, col = c("red","black"),lwd = 1)
+box()
+
+```
+
+
+## Multiple site and parameters (cont.)
+
+ggplot2: Reshape data from "wide" to "long" first using `tidyr` package.
+
+```{r echo=TRUE, eval=TRUE, message=FALSE}
+library(tidyr)
+library(dplyr)
+multi.data <- select(multi, site_no, dateTime, Wtemp_Inst, Flow_Inst)
+head(multi.data)
+
+longMulti <- gather(multi.data, variable, value, -site_no, -dateTime)
+head(longMulti)
+```
+
+
+## Multiple site and parameters (cont.)
+
+ggplot2: Reshape data from "wide" to "long" first using `tidyr` package.
+
+```{r echo=TRUE, eval=TRUE, fig.height=4}
+
+gp <- ggplot(longMulti, 
+             aes(dateTime, value, color=site_no)) +
+  geom_line() +
+  facet_grid(variable ~ .,scales= "free")
+gp
+
+```
+
+
+##  Time/Time zone discussion
+
+    
+##  USGS Advanced Retrievals: readNWISdata
+
+
     
 ## Water Quality Portal
 
 [Water Quality Portal](http://www.waterqualitydata.us/)
 
 <img src="../images/WQP.png" alt="Overview" style="width: 300px;"/>
+
+
+## Verbose and Progress
+
+Use tools from the `httr` package to get data transfer information, and/or a progress bar on long-running retrievals.
+
+```{r echo=TRUE, eval=FALSE}
+library(httr)
+set_config(verbose())
+set_config(progress())
+daily <- readNWISdv(siteNo, pCode)
+-> GET /nwis/dv/?site=05427718&format=waterml%2C1.1&
+  ParameterCd=00060&StatCd=00003&startDT=1851-01-01 
+  HTTP/1.1
+-> Host: waterservices.usgs.gov
+-> User-Agent: libcurl/7.43.0 httr/1.1.0 dataRetrieval/2.5.2
+-> Accept-Encoding: gzip, deflate
+-> Accept: application/json, text/xml, application/xml, */*
+-> 
+<- HTTP/1.1 200 OK
+<- Date: Wed, 09 Mar 2016 18:10:29 GMT
+<- Server: GlassFish Server Open Source Edition  4.1
+<- Vary: Accept-Encoding
+<- Content-Encoding: gzip
+<- Content-Type: text/xml;charset=UTF-8
+<- X-UA-Compatible: IE=edge,chrome=1
+<- ResponseTime: D=258500 t=1457547029642140
+<- Connection: close
+<- Transfer-Encoding: chunked
+<- 
+Downloading: 53 kB
+```
+
 
 
 ## More information:
