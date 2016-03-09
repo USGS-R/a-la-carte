@@ -112,13 +112,12 @@
 
 <slide class=''><hgroup><h2>Introduction</h2></hgroup><article  id="introduction" class="smaller ">
 
-<p>Goals for Part II of today&#39;s workshop</p>
+<p>Goals for today&#39;s workshop</p>
 
 <ul>
 <li><strong>GLM</strong>: basic understanding of lake model</li>
-<li><strong>GLMr</strong>: run GLM from R, keep up-to-date version</li>
+<li><strong>GLMr</strong>: run GLM from R, keep up-to-date version of <strong>GLM</strong></li>
 <li><strong>glmtools</strong>: reproducible model results handling and visualizations</li>
-<li><strong>What&#39;s next?</strong>: linking lake models to catchment hydrology</li>
 </ul>
 
 </article></slide><slide class=''><hgroup><h2>Lake modeling overview</h2></hgroup><article  id="lake-modeling-overview" class="smaller ">
@@ -303,7 +302,7 @@ Location: <a target="_blank" title="glmtools on github" href="https://github.com
 <pre class = 'prettyprint lang-r'>tmp_run_dir = file.path(tempdir(), &quot;glm_egs&quot;)
 tmp_run_dir</pre>
 
-<pre >## [1] &quot;/var/folders/y_/1qp06xmj2ws0t8kv54q8wxgh0000gp/T//RtmplqfFfr/glm_egs&quot;</pre>
+<pre >## [1] &quot;/var/folders/y_/1qp06xmj2ws0t8kv54q8wxgh0000gp/T//Rtmp2Q7O7H/glm_egs&quot;</pre>
 
 <pre class = 'prettyprint lang-r'>dir.create(tmp_run_dir)</pre>
 
@@ -317,7 +316,7 @@ tmp_run_dir</pre>
 
 <pre class = 'prettyprint lang-r'>run_example_sim(tmp_run_dir, verbose = FALSE)</pre>
 
-<pre >## [1] &quot;/var/folders/y_/1qp06xmj2ws0t8kv54q8wxgh0000gp/T//RtmplqfFfr/glm_egs&quot;</pre>
+<pre >## [1] &quot;/var/folders/y_/1qp06xmj2ws0t8kv54q8wxgh0000gp/T//Rtmp2Q7O7H/glm_egs&quot;</pre>
 
 <p>You should have a directory that looks like this</p>
 
