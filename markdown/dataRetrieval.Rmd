@@ -13,7 +13,6 @@ output:
     logo: ../images/simple-shadow.png
     smaller: yes
     widescreen: no
-    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -170,11 +169,11 @@ Following those basic examples, more complicated queries using `dataRetrival`'s 
 
 ## USGS Basic Web Retrievals: readNWISuv
 
-Knowing a site number (or site numbers), paremeter code (or codes), and start and end date. Let's start by asking for gage height (parameter code = 00065) data for Lake Mendota at Madison, WI (right off Tenney Park on the Yahara River). 
+Knowing a site number (or site numbers), paremeter code (or codes), and start and end date. Let's start by asking for discharge (parameter code = 00060) data for the Yahara River at Windsor, WI (an inlet to Lake Mendota). 
 
 ```{r echo=TRUE, eval=TRUE}
-siteNo <- "05428000"
-pCode <- "00065"
+siteNo <- "05427718"
+pCode <- "00060"
 start.date <- "2014-10-01"
 end.date <- "2015-09-30"
 
@@ -242,7 +241,7 @@ url <- attr(yahara, "url")
 ```{r echo=TRUE, eval=TRUE, fig.height=3.5}
 library(ggplot2)
 ts <- ggplot(yahara,
-             aes(dateTime, GH_Inst)) +
+             aes(dateTime, Flow_Inst)) +
       geom_line()
 ts
 ```
@@ -261,13 +260,165 @@ ts <- ts +
 ts
 ```
 
+##  USGS Basic Web Retrievals: readNWISdv
+
+The unit value discharge data is 15 minute data availabe back to 2007. 
+
+Daily mean data is available for that site back to 1976.
+
+```{r echo=TRUE, eval=TRUE, fig.height=3.5}
+daily <- readNWISdv(siteNo, pCode)
+daily <- renameNWISColumns(daily)
+dd <- ggplot(daily, aes(Date,Flow)) +
+  xlab("") +
+  ylab(attr(daily,"variableInfo")$parameter_nm) +
+  geom_line()
+dd
+```
     
+## Multiple site and parameters
+
+The NWIS functions can be used to get multiple sites and multiple parameters in one call.
+
+```{r echo=TRUE, eval=TRUE}
+sites <- c("05427850","05427718") # 2 stations on Yahara
+pCodes <- c("00060","00010") #Temperature and discharge
+
+multi <- readNWISuv(sites,pCodes, "2016-03-01","2016-03-08")
+multi <- renameNWISColumns(multi)
+
+names(multi)
+
+variableInfo <- attr(multi, "variableInfo")
+siteInfo <- attr(multi, "siteInfo")
+
+```
+
+## Multiple site and parameters (cont.)
+
+Base R plots:
+
+```{r echo=TRUE, eval=FALSE}
+par(mfcol=c(2,1),oma=c(2,1,1,1), mar=c(1,4,0.1,0.1))
+
+site1 <- multi[multi$site_no == sites[1],]
+site2 <- multi[multi$site_no == sites[2],]
+plot(site1$dateTime, site1$Flow_Inst, type="l",col="red",
+     xlab = "",xaxt="n",
+     ylab=variableInfo$param_units[variableInfo$parameterCd == "00060"])
+
+lines(site2$dateTime, site2$Flow_Inst)
+plot(site1$dateTime, site1$Wtemp_Inst, type="l",col="red",
+     xlab = "", 
+     ylab=variableInfo$param_units[variableInfo$parameterCd == "00010"])
+lines(site2$dateTime, site2$Wtemp_Inst)
+legend("topleft", legend = siteInfo$site_no, 
+       cex=0.75, col = c("red","black"),lwd = 1)
+box()
+
+
+```
+
+## Multiple site and parameters (cont.)
+
+Base R plots:
+
+```{r echo=FALSE, eval=TRUE}
+par(mfcol=c(2,1),oma=c(2,1,1,1), mar=c(1,4,0.1,0.1))
+
+site1 <- multi[multi$site_no == sites[1],]
+site2 <- multi[multi$site_no == sites[2],]
+plot(site1$dateTime, site1$Flow_Inst, type="l",col="red",
+     xlab = "",xaxt="n",
+     ylab=variableInfo$param_units[variableInfo$parameterCd == "00060"])
+
+lines(site2$dateTime, site2$Flow_Inst)
+plot(site1$dateTime, site1$Wtemp_Inst, type="l",col="red",
+     xlab = "", 
+     ylab=variableInfo$param_units[variableInfo$parameterCd == "00010"])
+lines(site2$dateTime, site2$Wtemp_Inst)
+legend("topleft", legend = siteInfo$site_no, 
+       cex=0.75, col = c("red","black"),lwd = 1)
+box()
+
+```
+
+
+## Multiple site and parameters (cont.)
+
+ggplot2: Reshape data from "wide" to "long" first using `tidyr` package.
+
+```{r echo=TRUE, eval=TRUE, message=FALSE}
+library(tidyr)
+library(dplyr)
+multi.data <- select(multi, site_no, dateTime, Wtemp_Inst, Flow_Inst)
+head(multi.data)
+
+longMulti <- gather(multi.data, variable, value, -site_no, -dateTime)
+head(longMulti)
+```
+
+
+## Multiple site and parameters (cont.)
+
+ggplot2: Reshape data from "wide" to "long" first using `tidyr` package.
+
+```{r echo=TRUE, eval=TRUE, fig.height=4}
+
+gp <- ggplot(longMulti, 
+             aes(dateTime, value, color=site_no)) +
+  geom_line() +
+  facet_grid(variable ~ .,scales= "free")
+gp
+
+```
+
+
+##  Time/Time zone discussion
+
+    
+##  USGS Advanced Retrievals: readNWISdata
+
+
     
 ## Water Quality Portal
 
 [Water Quality Portal](http://www.waterqualitydata.us/)
 
 <img src="../images/WQP.png" alt="Overview" style="width: 300px;"/>
+
+
+## Verbose and Progress
+
+Use tools from the `httr` package to get data transfer information, and/or a progress bar on long-running retrievals.
+
+```{r echo=TRUE, eval=FALSE}
+library(httr)
+set_config(verbose())
+set_config(progress())
+daily <- readNWISdv(siteNo, pCode)
+-> GET /nwis/dv/?site=05427718&format=waterml%2C1.1&
+  ParameterCd=00060&StatCd=00003&startDT=1851-01-01 
+  HTTP/1.1
+-> Host: waterservices.usgs.gov
+-> User-Agent: libcurl/7.43.0 httr/1.1.0 dataRetrieval/2.5.2
+-> Accept-Encoding: gzip, deflate
+-> Accept: application/json, text/xml, application/xml, */*
+-> 
+<- HTTP/1.1 200 OK
+<- Date: Wed, 09 Mar 2016 18:10:29 GMT
+<- Server: GlassFish Server Open Source Edition  4.1
+<- Vary: Accept-Encoding
+<- Content-Encoding: gzip
+<- Content-Type: text/xml;charset=UTF-8
+<- X-UA-Compatible: IE=edge,chrome=1
+<- ResponseTime: D=258500 t=1457547029642140
+<- Connection: close
+<- Transfer-Encoding: chunked
+<- 
+Downloading: 53 kB
+```
+
 
 
 ## More information:
