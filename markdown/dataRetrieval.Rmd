@@ -163,9 +163,6 @@ pander(df)
 
 </div>
 
-The next 3 sections will show examples of using a few of `dataRetrieval`'s basic functions.
-
-Following those basic examples, more complicated queries using `dataRetrival`'s more advanced functions will be introduced.
 
 ## USGS Basic Web Retrievals: readNWISuv
 
@@ -373,12 +370,128 @@ gp
 
 ```
 
+## Multiple site and parameters (cont.)
 
-##  Time/Time zone discussion
+To demonstrate the power of `tidyr` + `dplyr` + `ggplot2` + `dataRetrieval`:
 
-    
+```{r echo=TRUE, eval=FALSE}
+sites <- c("05427850","05427718","05428000","05427880") 
+pCodes <- c("00060","00010","00055","00065") 
+
+wideMulti <- readNWISuv(sites,pCodes, "2016-03-01","2016-03-08") %>%
+         select(-ends_with("_cd"))
+
+siteInfo <- attr(wideMulti, "siteInfo")
+paramInfo <- attr(wideMulti, "variableInfo")
+
+longMulti <- gather(wideMulti, variable, value, -site_no, -dateTime) %>%
+         mutate(variable = as.factor(variable)) %>%
+         mutate(site_no = as.factor(site_no))
+
+levels(longMulti$variable) <- paramInfo$param_units
+levels(longMulti$site_no) <- siteInfo$station_nm
+
+gp <- ggplot(longMulti, 
+             aes(dateTime, value, color=site_no)) +
+  geom_line(size=1.5) + xlab("") + ylab("") +
+  facet_grid(variable ~ .,scales= "free") + 
+  theme(legend.title=element_blank())
+gp
+
+```
+
+## Multiple site and parameters (cont.)
+
+To demonstrate the power of `tidyr` + `dplyr` + `ggplot2` + `dataRetrieval`:
+
+```{r echo=FALSE, eval=TRUE, fig.height=6, warning=FALSE}
+sites <- c("05427850","05427718","05428000","05427880") 
+pCodes <- c("00060","00010","00055","00065") 
+
+wideMulti <- readNWISuv(sites,pCodes, "2016-03-01","2016-03-08") %>%
+         select(-ends_with("_cd"))
+
+siteInfo <- attr(wideMulti, "siteInfo")
+paramInfo <- attr(wideMulti, "variableInfo")
+
+longMulti <- gather(wideMulti, variable, value, -site_no, -dateTime) %>%
+         mutate(variable = as.factor(variable)) %>%
+         mutate(site_no = as.factor(site_no))
+
+levels(longMulti$variable) <- paramInfo$param_units
+levels(longMulti$site_no) <- siteInfo$station_nm
+
+gp <- ggplot(longMulti, 
+             aes(dateTime, value, color=site_no)) +
+  geom_line(size=1.5) + xlab("") + ylab("") +
+  facet_grid(variable ~ .,scales= "free") + 
+  theme(legend.title=element_blank())
+gp
+
+```
+
+
+##  USGS Advanced Retrievals: Discover Data
+
+This is all great when you know your site numbers.
+
+What do you do when you don't?
+
+If you are looking in a specific area, you can browse the 
+Environmental Data Discovery and Transformation tool: [EnDDaT](http://cida.usgs.gov/enddat/dataDiscovery.jsp)
+
+If you don't....
+
+Become familiar with the possibilities of the web services [HERE](http://waterservices.usgs.gov/)
+
+<img src="../images/waterservices.png" alt="Overview" style="width: 450px;"/>
+
 ##  USGS Advanced Retrievals: readNWISdata
 
+Let's look for long-term USGS phosphorous data in Wisconsin:
+
+```{r echo=TRUE, eval=FALSE}
+?readNWISdata
+
+pCode <- c("00662","00665")
+phWI <- readNWISdata(stateCd="WI", service="site",
+                     seriesCatalogOutput=TRUE)
+
+phWI.1 <- filter(phWI, parm_cd %in% pCode) %>%
+            filter(count_nu > 300) %>%
+            mutate(period = as.Date(end_date) - as.Date(begin_date)) %>%
+            filter(period > 15*365)
+
+```
+
+##  readNWISdata
+
+```{r echo=FALSE, eval=TRUE, message=FALSE}
+library(DT)
+pCode <- c("00662","00665")
+phWI <- readNWISdata(stateCd="WI", service="site",
+                     seriesCatalogOutput=TRUE)
+
+phWI.1 <- filter(phWI, parm_cd %in% pCode) %>%
+            filter(count_nu > 300) %>%
+            mutate(period = as.Date(end_date) - as.Date(begin_date)) %>%
+            filter(period > 15*365)
+datatable(phWI.1[,c("site_no","station_nm","data_type_cd","begin_date","end_date","count_nu")],rownames = FALSE, 
+            options = list(pageLength = 10))
+```
+ 
+##  Let's look on a map 
+
+```{r echo=TRUE, eval=TRUE, message=FALSE, fig.height=4}
+library(leaflet)
+leaflet() %>% 
+  addProviderTiles("CartoDB.Positron") %>%
+  addCircleMarkers(phWI.1$dec_long_va,phWI.1$dec_lat_va,
+                   color = "red", radius=3, stroke=FALSE,
+                   fillOpacity = 0.8, opacity = 0.8,
+                   popup=phWI.1$station_nm)
+        
+```
 
     
 ## Water Quality Portal
@@ -386,6 +499,16 @@ gp
 [Water Quality Portal](http://www.waterqualitydata.us/)
 
 <img src="../images/WQP.png" alt="Overview" style="width: 300px;"/>
+
+## Water Quality Portal Advise
+
+More filters is often *slower*. 
+Bounding box queries are slow.
+
+Check the website for new features!
+
+
+##  Time/Time zone discussion
 
 
 ## Verbose and Progress
