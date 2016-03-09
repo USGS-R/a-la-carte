@@ -1,6 +1,6 @@
 ---
-title: "National Map Products: NHD and NHD+"
-author: "<b>USGS</b>: Emily K Read & Dave Blodgett"
+title: "USGS National Map Products, NHD, and NHD+"
+author: "<b>USGS</b>: Emily Read & Dave Blodgett"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 knit: (function(inputFile, encoding) { 
       out_dir <- 'test';
@@ -22,12 +22,11 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Overview of USGS National Map
 ##### [The National Map](http://nationalmap.gov/#) includes orthoimagery (aerial photographs), elevation, geographic names, hydrography, boundaries, transportation, structures, and land cover.
 
-
 1. [Nat'l Map FAQs](http://www.usgs.gov/faq/categories/9854)
 2. [Nat'l Map REST services](http://services.nationalmap.gov/arcgis/rest/services)
 3. [Nat'l Map Download client](http://viewer.nationalmap.gov/basic/)
 <p align="center">
-  <img src="../images/theNatlMap.png" style="width: 325px;" align="right"/>
+  <img src="../images/theNatlMap.png" style="width: 450px;" align="right"/>
 </p>
 
 
@@ -39,7 +38,7 @@ knitr::opts_chunk$set(echo = FALSE)
 3. Available in 1:1,000,000; 1:100,000 ('medium res'); and 1:24,000 ('high res' or 'local res').
 3. Used in conjunction with USGS Watershed Boundary Dataset, and 3D Elevation Program (3DEP) to create the NHD+
 <p align="center">
-  <img src="../images/NHDpage.png" style="width: 250px;" align="right"/>
+  <img src="../images/NHDpage.png" style="width: 325px;" align="right"/>
 </p>
 
 [NHD and WBD FAQs](http://nhd.usgs.gov/Frequently+Asked+Questions+about+the+NHD+&+WBD.pdf)
@@ -61,10 +60,16 @@ knitr::opts_chunk$set(echo = FALSE)
 *"Can I deal with NHD in the cloud?"*
 
 ##NHD+
-1. NHDPlus is an integrated suite of application-ready geospatial data sets that incorporate many of the best features of the National Hydrography Dataset (NHD), the National Elevation Dataset (NED), and the Watershed Boundary Dataset (WBD).
-2. NHD+ V2 available for 1:100,000 NHD; high-res NHD+ in development
-3. USGS and EPA contract Horizon Systems to build and maintain [NHD+](http://www.horizon-systems.com/nhdplus/)
+NHDPlus is an integrated suite of application-ready geospatial data sets that incorporate many of the best features of the National Hydrography Dataset (NHD), the National Elevation Dataset (NED), and the Watershed Boundary Dataset (WBD).USGS and EPA contract Horizon Systems to build and maintain [NHD+](http://www.horizon-systems.com/nhdplus/). The NHD+ V2 is available for 1:100,000 NHD; high-res NHD+ in development. 
 
+####The NHD+ has
+
+1. Flow direction, flow accumulation and elevation grids
+2. Flowline min/max elevations and slopes
+3. Flow volume & velocity estimates for each flowline in the stream network
+4. and much more, including value-added spinoff products such as [StreamCat](https://www.epa.gov/national-aquatic-resource-surveys/streamcat)
+
+<img src="../images/StreamCat.png" style="width: 400px;" align="center"/>
 
 ##How is the NHD+ made?
 
@@ -91,6 +96,12 @@ Some rules apply
 ###Share your expertise
 
 1. How do you access NHD data?
-
-
 2. How do you access NHD+ data?
+
+Here is an [example NHD access R script](https://github.com/USGS-R/necsc-lake-modeling/blob/master/scripts/get_raw_nhd_shp.R) and associated [config file](https://github.com/USGS-R/necsc-lake-modeling/blob/master/configs/NHD_config.yml)
+
+##Questions and comments
+
+eread@usgs.gov
+
+dblodgett@usgs.gov 
