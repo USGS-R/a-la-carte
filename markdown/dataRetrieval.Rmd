@@ -518,11 +518,25 @@ meas <- readNWISdata(state_cd="WI",service="measurements",format="rdb_expanded")
 
 ```
     
-## Water Quality Portal
+## Water Quality Portal (WQP)
 
 [Water Quality Portal](http://www.waterqualitydata.us/)
 
+<div class="columns-2">
+
+* Multiple agencies
+    + USGS data comes from the NWIS database
+    + EPA data comes from the STORET database (this includes many state and tribal organizations)
+
+* WQP brings data from all these oranizations together and provides it in a single format
+
+* Much more verbose output than NWIS
+
+* To get non-NWIS data, need to use CharacteristicName instead of parameter code.
+
 <img src="../images/WQP.png" alt="Overview" style="width: 300px;"/>
+
+</div>
 
 ## Water Quality Portal Advise
 
