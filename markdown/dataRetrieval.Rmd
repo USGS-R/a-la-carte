@@ -170,11 +170,11 @@ Following those basic examples, more complicated queries using `dataRetrival`'s 
 
 ## USGS Basic Web Retrievals: readNWISuv
 
-Knowing a site number (or site numbers), paremeter code (or codes), and start and end date. Let's start by asking for gage height (parameter code = 00065) data for Lake Mendota at Madison, WI (right off Tenney Park on the Yahara River). 
+Knowing a site number (or site numbers), paremeter code (or codes), and start and end date. Let's start by asking for discharge (parameter code = 00060) data for the Yahara River at Windsor, WI (an inlet to Lake Mendota). 
 
 ```{r echo=TRUE, eval=TRUE}
-siteNo <- "05428000"
-pCode <- "00065"
+siteNo <- "05427718"
+pCode <- "00060"
 start.date <- "2014-10-01"
 end.date <- "2015-09-30"
 
@@ -242,7 +242,7 @@ url <- attr(yahara, "url")
 ```{r echo=TRUE, eval=TRUE, fig.height=3.5}
 library(ggplot2)
 ts <- ggplot(yahara,
-             aes(dateTime, GH_Inst)) +
+             aes(dateTime, Flow_Inst)) +
       geom_line()
 ts
 ```
@@ -261,6 +261,21 @@ ts <- ts +
 ts
 ```
 
+##  USGS Basic Web Retrievals: readNWISdv
+
+The unit value discharge data is 15 minute data availabe back to 2007. 
+
+Daily mean data is available for that site back to 1976.
+
+```{r echo=TRUE, eval=TRUE, fig.height=3.5}
+daily <- readNWISdv(siteNo, pCode)
+daily <- renameNWISColumns(daily)
+dd <- ggplot(daily, aes(Date,Flow)) +
+  xlab("") +
+  ylab(attr(daily,"variableInfo")$parameter_nm) +
+  geom_line()
+dd
+```
     
     
 ## Water Quality Portal

@@ -160,12 +160,12 @@ Following those basic examples, more complicated queries using `dataRetrival`'s 
 
 ## USGS Basic Web Retrievals: readNWISuv
 
-Knowing a site number (or site numbers), paremeter code (or codes), and start and end date. Let's start by asking for gage height (parameter code = 00065) data for Lake Mendota at Madison, WI (right off Tenney Park on the Yahara River). 
+Knowing a site number (or site numbers), paremeter code (or codes), and start and end date. Let's start by asking for discharge (parameter code = 00060) data for the Yahara River at Windsor, WI (an inlet to Lake Mendota). 
 
 
 ```r
-siteNo <- "05428000"
-pCode <- "00065"
+siteNo <- "05427718"
+pCode <- "00060"
 start.date <- "2014-10-01"
 end.date <- "2015-09-30"
 
@@ -186,7 +186,7 @@ names(yahara)
 
 ```
 ## [1] "agency_cd"        "site_no"          "dateTime"        
-## [4] "X_00065_00011"    "X_00065_00011_cd" "tz_cd"
+## [4] "X_00060_00011"    "X_00060_00011_cd" "tz_cd"
 ```
 
 
@@ -199,8 +199,8 @@ names(yahara)
 ```
 
 ```
-## [1] "agency_cd"  "site_no"    "dateTime"   "GH_Inst"    "GH_Inst_cd"
-## [6] "tz_cd"
+## [1] "agency_cd"    "site_no"      "dateTime"     "Flow_Inst"   
+## [5] "Flow_Inst_cd" "tz_cd"
 ```
 
 ## Explore Data
@@ -211,13 +211,13 @@ head(yahara)
 ```
 
 ```
-##   agency_cd  site_no            dateTime GH_Inst GH_Inst_cd tz_cd
-## 1      USGS 05428000 2014-10-01 05:00:00    9.96          A   UTC
-## 2      USGS 05428000 2014-10-01 05:15:00    9.95          A   UTC
-## 3      USGS 05428000 2014-10-01 05:30:00    9.95          A   UTC
-## 4      USGS 05428000 2014-10-01 05:45:00    9.96          A   UTC
-## 5      USGS 05428000 2014-10-01 06:00:00    9.96          A   UTC
-## 6      USGS 05428000 2014-10-01 06:15:00    9.97          A   UTC
+##   agency_cd  site_no            dateTime Flow_Inst Flow_Inst_cd tz_cd
+## 1      USGS 05427718 2014-10-01 05:00:00        16            A   UTC
+## 2      USGS 05427718 2014-10-01 05:15:00        16            A   UTC
+## 3      USGS 05427718 2014-10-01 05:30:00        16            A   UTC
+## 4      USGS 05427718 2014-10-01 05:45:00        16            A   UTC
+## 5      USGS 05427718 2014-10-01 06:00:00        16            A   UTC
+## 6      USGS 05427718 2014-10-01 06:15:00        16            A   UTC
 ```
 
 The data is returned as a data frame with 5 columns:
@@ -231,9 +231,9 @@ The data is returned as a data frame with 5 columns:
 
   dateTime    POSIXct
 
-   GH_Inst      num  
+  Flow_Inst     num  
 
- GH_Inst_cd     chr  
+Flow_Inst_cd    chr  
 
     tz_cd       chr  
 ---------------------
@@ -262,7 +262,7 @@ To access the attributes:
 url <- attr(yahara, "url")
 ```
 
-[Raw Data](http://nwis.waterservices.usgs.gov/nwis/iv/?site=05428000&format=waterml,1.1&ParameterCd=00065&startDT=2014-10-01&endDT=2015-09-30)
+[Raw Data](http://nwis.waterservices.usgs.gov/nwis/iv/?site=05427718&format=waterml,1.1&ParameterCd=00060&startDT=2014-10-01&endDT=2015-09-30)
 
 ##  Explore Data (cont.)
 
@@ -270,7 +270,7 @@ url <- attr(yahara, "url")
 ```r
 library(ggplot2)
 ts <- ggplot(yahara,
-             aes(dateTime, GH_Inst)) +
+             aes(dateTime, Flow_Inst)) +
       geom_line()
 ts
 ```
@@ -294,6 +294,24 @@ ts
 
 ![](..\dataRetrieval_files/figure-html/unnamed-chunk-17-1.png)
 
+##  USGS Basic Web Retrievals: readNWISdv
+
+The unit value discharge data is 15 minute data availabe back to 2007. 
+
+Daily mean data is available for that site back to 1976.
+
+
+```r
+daily <- readNWISdv(siteNo, pCode)
+daily <- renameNWISColumns(daily)
+dd <- ggplot(daily, aes(Date,Flow)) +
+  xlab("") +
+  ylab(attr(daily,"variableInfo")$parameter_nm) +
+  geom_line()
+dd
+```
+
+![](..\dataRetrieval_files/figure-html/unnamed-chunk-18-1.png)
     
     
 ## Water Quality Portal
