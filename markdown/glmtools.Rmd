@@ -113,7 +113,7 @@ GLMr Code in R:
 run_glm(sim_folder)
 ```
 
-```{r,  echo=TRUE, eval=FALSE}
+```
        ------------------------------------------------
        |  General Lake Model (GLM)   Version 2.1.8    |
        ------------------------------------------------
@@ -239,11 +239,8 @@ run_glm(tmp_run_dir)
 ```{r}
 nc_file <- file.path(tmp_run_dir,'output.nc')
 ```
-```{r, echo=F}
+```{r}
 plot_temp(file = nc_file, fig_path = '../images/temperature.png')
-```
-```{r, eval=F}
-plot_temp(file = nc_file, fig_path = FALSE)
 ```
 <img src="../images/temperature.png" alt="lake temperature" align="center" style="width: 90%;"/>
 
@@ -284,13 +281,9 @@ run_glm(tmp_run_dir)
  - quickly visualize new temps
 ```{r}
 nc_file <- file.path(tmp_run_dir,'output.nc')
-```
-```{r, echo=F}
 plot_temp(file = nc_file, fig_path = '../images/temperature2.png')
 ```
-```{r, eval=F}
-plot_temp(file = nc_file, fig_path = FALSE)
-```
+
 <img src="../images/temperature2.png" alt="lake temperature" align="center" style="width: 90%;"/>
 
 ## glmtools: visualize result
@@ -305,9 +298,16 @@ sim_vars(file = nc_file)
 
  - quickly visualize other variables
  
-```{r, echo=F}
-plot_var(file = nc_file, 'u_mean', fig_path = '../images/velocity.png')
+```{r}
+plot_var(file = nc_file, var_name = 'u_mean', fig_path = '../images/velocity.png')
 ```
-```{r, eval=F}
-plot_var(file = nc_file, var_name = 'u_mean', fig_path = FALSE)
+<img src="../images/velocity.png" alt="mean velocity" align="center" style="width: 90%;"/>
+
+## glmtools: visualize result 
+
+ - quickly compare to field data
+```{r, eval=FALSE, results='hide'}
+field_file <- file.path(tmp_run_dir, 'field_data.tsv')
+plot_var_compare(nc_file, field_file, 'temp', resample=TRUE, fig_path = '../images/temp_compare.png')
 ```
+<img src="../images/temp_compare.png" alt="lake temperature" align="center" style="width: 60%;"/>
