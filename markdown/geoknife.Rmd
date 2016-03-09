@@ -65,7 +65,7 @@ What does `geoknife` do to the data?
 What does `geoknife` do to the data?
 
 * `geoknife` subsets and/or summarizes data on a webserver, and let's you know when it is complete
-![data summary and data subset](images/summary_subset.png)
+<img src="images/summary_subset.png" width="100%" />
 
 
 ## Introduction
@@ -74,7 +74,7 @@ How to discover datasets?
 * Using the `geoknife` `query()` function (examples to follow)
 * Searching the [GDP catalog](http://cida.usgs.gov/gdp/)
 * Websearches for OPeNDAP datasets (e.g., [apdrc website](http://apdrc.soest.hawaii.edu/data/data.php))
-![apdrc datasets](images/apdrc_data.png)
+<img src="images/apdrc_data.png" width="100%" />
 
 
 ## Overview
@@ -82,9 +82,17 @@ geoknife concepts:
 ```{r, echo=T, eval=F}
 geoknife(stencil, fabric, knife)
 ```
-* `stencil`: the "feature" (lake, watershed, point, state, etc)
-* `fabric`: the web available gridded data to be processed
-* `knife`: processing configuration
+* `stencil`: the "feature" (lake, watershed, point, state, etc)  
+
+<img src="images/geoknife_stencil.png" width="20%" />  
+
+* `fabric`: the web available gridded data to be processed  
+
+<img src="images/geoknife_fabric.png" width="20%" />  
+
+* `knife`: processing configuration  
+
+<img src="images/geoknife_knife.png" width="20%" />
 
 ## Stencil
 A stencil can be defined in a number of different ways:  
@@ -97,50 +105,38 @@ stencil = c(-89, 46)
 ```{r, echo=T, eval=F}
 stencil = data.frame('point1'=c(-89, 46), 'point2'=c(-88.6, 45.2))
 ```
-* web available data (`webgeom` class)
+* as a `sp::SpatialPolygons` class from a local shapefile
+This is kind of a a hack right now, so I am not going to show it. But suggest it [here](https://github.com/USGS-R/geoknife/issues) if you want it.
+* web available data (`webgeom` class) that are quickstart
 ```{r, echo=T, eval=F}
 stencil = webgeom('state::New Hampshire,Wisconsin')
 stencil = webgeom('ecoregion::Colorado Plateaus,Driftless Area')
 ```
-
-## NWIS Overview (US Geological Survey water data)
-
-* Unit Data
-    + "Real-time" data
-    + Available data from 2007 (big improvement from 120 days!)
-  
-* Daily Data
-    + Data aggregated from the unit data to a daily statistic
-    + This data can go back many decades
-    
-* Discrete Data
-    + Water quality data
-    + Groundwater level
-    + Rating curves
-    + Surfacewater measurements
-    
-* Meta Data
-    + Site information
-    + Parameter information
-
-## NWIS Links
-More information:
-
-[Water Services](http://waterservices.usgs.gov/)
-
-[Help](http://help.waterdata.usgs.gov/)
-
-## Water Quality Portal
-[Water Quality Portal](http://www.waterqualitydata.us/)
-
-## Slide with R Output
-
-```{r cars, echo = TRUE}
-summary(cars)
+* web available data (`webgeom` class) from a shapefile that you have uploaded
+```{r, echo=T, eval=F}
+stencil = webgeom(geom="upload:CIDA_TEST_", attribute = "Letter", value= "C")
 ```
 
-## Slide with Plot
+## Stencil
+Note the main difference between `simplegeom` and `webgeom` is their location/reference. 
+* `simplegeom` is something that exists in your R environment
+* `webgeom` is a web resource, using the Web Feature Service standard
 
-```{r pressure}
-plot(pressure)
+In my workflows, I tend to use both: 
+`simplegeoms` for point collections (lon, lat)
+```{r, echo=T, eval=F}
+stencil = data.frame('point1'=c(-89, 46), 'point2'=c(-88.6, 45.2))
 ```
+`webgeoms` for getting data from an existing HUC, state, or uploading a bigger more complex file to be used again and again:
+```{r, echo=T, eval=F}
+stencil = webgeom('HUC8::09020306,14060009')
+```
+BTW, `webgeom('HUC8::09020306,14060009')` is equivalent to:
+```{r, echo=T, eval=F}
+stencil = webgeom(geom = 'derivative:wbdhu8_alb_simp',
+                  attribute = 'HUC_8',
+                  values = c('09020306', '14060009'))
+```
+`geoknife` has some "quickstart" references that simplify syntax for common stencils and fabric
+
+

@@ -6,7 +6,7 @@ knit: (function(inputFile, encoding) {
       rmarkdown::render(inputFile,
                         encoding=encoding, 
                         output_file='../index.html') })
-output: html_document
+output: markdowntemplates::skeleton
 ---
 
 ##USGS OWI workshop: Tools for access, manipulation, and modeling of federal water and climate data
