@@ -13,7 +13,6 @@ output:
     logo: ../images/simple-shadow.png
     smaller: yes
     widescreen: no
-    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
