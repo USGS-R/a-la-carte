@@ -34,7 +34,7 @@ Goals for Part II of today's workshop
 </p>
 
 ## Lake modeling overview
-![model output](images/test_figure.png)
+<img src="../images/temperature.png" alt="lake temperature" align="center" style="width: 90%;"/>
 
 
 ## GLM
@@ -240,12 +240,12 @@ run_glm(tmp_run_dir)
 nc_file <- file.path(tmp_run_dir,'output.nc')
 ```
 ```{r, echo=F}
-plot_temp(file = nc_file, fig_path = '../images_temperature.png')
+plot_temp(file = nc_file, fig_path = '../images/temperature.png')
 ```
 ```{r, eval=F}
 plot_temp(file = nc_file, fig_path = FALSE)
 ```
-<img src="../images_temperature.png" alt="lake temperature" align="center" style="width: 90%;"/>
+<img src="../images/temperature.png" alt="lake temperature" align="center" style="width: 90%;"/>
 
 ## glmtools section 2
 **Goals**  
@@ -286,9 +286,28 @@ run_glm(tmp_run_dir)
 nc_file <- file.path(tmp_run_dir,'output.nc')
 ```
 ```{r, echo=F}
-plot_temp(file = nc_file, fig_path = '../images_temperature2.png')
+plot_temp(file = nc_file, fig_path = '../images/temperature2.png')
 ```
 ```{r, eval=F}
 plot_temp(file = nc_file, fig_path = FALSE)
 ```
-<img src="../images_temperature2.png" alt="lake temperature" align="center" style="width: 90%;"/>
+<img src="../images/temperature2.png" alt="lake temperature" align="center" style="width: 90%;"/>
+
+## glmtools: visualize result
+ 
+ - find simulation variables
+
+```{r}
+sim_vars(file = nc_file)
+```
+
+## glmtools: visualize result 
+
+ - quickly visualize other variables
+ 
+```{r, echo=F}
+plot_var(file = nc_file, 'u_mean', fig_path = '../images/velocity.png')
+```
+```{r, eval=F}
+plot_var(file = nc_file, var_name = 'u_mean', fig_path = FALSE)
+```
