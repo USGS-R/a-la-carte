@@ -50,17 +50,30 @@ Where does the data come from?
 * NASA
     + NLDAS, GLDAS, various
     + more being added....
+* NOAA
+    + NARR, many others
 * Academia
     + E.g., PRISM
 
+## Introduction
 What does `geoknife` do to the data?
 
-* 
+* `geoknife` subsets and/or summarizes data on a webserver, and let's you know when it is complete
+![web workflow](images/web_workflow.png)
 
-How to discover data?
+## Introduction
+What does `geoknife` do to the data?
 
-* Examples will be provided
+* `geoknife` subsets and/or summarizes data on a webserver, and let's you know when it is complete
+![data summary and data subset](images/summary_subset.png)
 
+## Introduction
+How to discover datasets?
+
+* Using the `geoknife` `query()` function (examples to follow)
+* Searching the [GDP catalog](http://cida.usgs.gov/gdp/)
+* Websearches for OPeNDAP datasets (e.g., [apdrc website](http://apdrc.soest.hawaii.edu/data/data.php))
+![apdrc datasets](images/apdrc_data.png)
 
 
 ## Overview
