@@ -11,7 +11,7 @@ output:
   ioslides_presentation: 
     css: ../styles.css
     logo: ../images/simple-shadow.png
-    smaller: yes
+    smaller: no
     transition: faster
 ---
 
@@ -37,40 +37,76 @@ output:
 
 ## Upping your Analytical Game
 
-### Goals
+### Efficiency 
+- quickly write, revise, run, and revisit your code
 
-- Efficiency - you can develop, revise, and revisit your code
-- Transparency - others can see & understand what you're doing
-- Reproducibility - someone else can run your analyses
-- Reproducible Research - integrated data, text, code, and results
+### Transparency 
+- let others see & understand what you're doing
 
-## Why reproducibility
+### Reproducibility 
+- enable anyone to run your analyses
 
-- do each thing just once
-- add/change data
-- add/change methods
+```{r, include=FALSE}
+# Reproducibility is the most stringent of of E,T,R, so we'll use that word to indicate all three
+# Anything you do to implement one probably helps with the others
+```
+
+## Benefits
+
+- implement each idea just once
+- change data or methods freely
+- handle more data & complexity
 - run on clusters/cloud
 - share with others
-- share with your future self - paper revisions, check an analysis step, reuse code in a new project
+- share with your future self
 
-## What makes work reproducible?
+```{r, include=FALSE}
+# future self: paper revisions, check an analysis step, reuse code in a new project
+```
 
-- self-contained project, public dependencies
-- traceable data flow, ideally automated
+## What makes work efficient, transparent, & reproducible?
+
+### readable
 - readable code
+- traceable data flow
 
-## Reproducible workflows
+### uncorruptible
+- automated data flow
+- smart redundancy
+- code versioning
+
+### self-contained
+- data to reports
+- no local dependencies
+
+```{r, include=FALSE}
+# Reproducible Research - integrate your data, text, code, and results. this is
+# sometimes but not always what you want, especially with modeling
+```
+
+## Readable code
+
+- code comments
+- meaningful variable names
+- meaningful white space
+- clarity via conciseness
+- decomposition (modularity)
+- don't repeat yourself (DRY)
+
+## Traceable data flow
 
 - an undocumented system is no system
-- redundancy is great for data storage, horrible for data analysis
-- cache intermediate data for iteration
-- prepare for evolution of the workflow - trunk vs branch
-- remake, make
+- redundancy is great for data storage, awful for data analysis
+- cache intermediate data products
+- keep it acyclical
+- expect your workflow to evolve
 
-## Reproducible workflows
+## Automated data flow
+
+- use [`make`](http://www.gnu.org/software/make/)
 
 <p align="center">
-  <img src="images/remake_JR.png" alt="geoknife" style="width: 600px;" align="center"/>
+  <img src="images/remake_JR.png" alt="remake" style="width: 600px;" align="center"/>
 </p>
 
 ## Reproducible data access
@@ -79,27 +115,27 @@ output:
 - script your data access
   - `download.file()`
   - `httr::GET()`
-  - [geoknife](https://github.com/USGS-R/geoknife)
-  - [dataRetrieval](https://github.com/USGS-R/dataRetrieval)
-  - [dataone](https://github.com/DataONEorg/rdataone), etc.
+  - [`geoknife`](https://github.com/USGS-R/geoknife)
+  - [`dataRetrieval`](https://github.com/USGS-R/dataRetrieval)
+  - [`dataone`](https://github.com/DataONEorg/rdataone), etc.
 - cache a copy, but know it's fleeting
 
-## Reproducible modeling
+## Reproducible quality assessment
+
+- even highly curated data have flaws
+- check your n's - nrow, nunique
+- check for outliers
+- check for duplicates
+- preserve 'raw' data
+- script your corrections
+
+## Scalable modeling
 
 - separate the model from the model manager
 - cache intermediate data
 - create model run metadata; prefer tables, text, and png to pdf for quick review
 - store everything until you can't
 - expect obsolescence, so save long-lived artifacts if they'll be needed
-
-## Readability
-
-- code comments
-- meaningful variable names
-- meaningful white space
-- clarity via conciseness
-- decomposition (modularity)
-- don't repeat yourself (DRY)
 
 ## GitHub
 
@@ -109,14 +145,6 @@ output:
 - code versioning - document changes, option to revert or checkout
 - open research is possible
 
-## Quality assessment
-
-- even highly curated data have flaws
-- check your n's - nrow, nunique
-- check for outliers
-- check for duplicates
-- preserve 'raw' data
-- script your corrections
 
 ## Fisheries dataset
 
