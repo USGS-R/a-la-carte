@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 What is `geoknife`?
 <p align="center">
-  <img src="images/geoknife.png" alt="geoknife" style="width: 300px;" align="center"/>
+  <img src="../images/geoknife.png" alt="geoknife" style="width: 300px;" align="center"/>
 </p>
 
 * R-package to get climate data into R
@@ -39,7 +39,7 @@ The `geoknife` package was created to support web-based geoprocessing of large g
 
 read more about `geoknife`:  
 <p align="center">
-  <a href="http://onlinelibrary.wiley.com/doi/10.1111/ecog.01880/full"><img src="images/ecography_geoknife.png" alt="geoknife" align="center"/></a>
+  <a href="http://onlinelibrary.wiley.com/doi/10.1111/ecog.01880/full"><img src="../images/ecography_geoknife.png" alt="geoknife" align="center"/></a>
 </p>
 ## Introduction
 
@@ -50,21 +50,58 @@ Where does the data come from?
 * NASA
     + NLDAS, GLDAS, various
     + more being added....
+* NOAA
+    + NARR, many others
 * Academia
     + E.g., PRISM
 
+## Introduction
 What does `geoknife` do to the data?
 
-* 
+* `geoknife` subsets and/or summarizes data on a webserver, and let's you know when it is complete
+![web workflow](images/web_workflow.png)
 
-How to discover data?
+## Introduction
+What does `geoknife` do to the data?
 
-* Examples will be provided
+* `geoknife` subsets and/or summarizes data on a webserver, and let's you know when it is complete
+![data summary and data subset](images/summary_subset.png)
 
+
+## Introduction
+How to discover datasets?
+
+* Using the `geoknife` `query()` function (examples to follow)
+* Searching the [GDP catalog](http://cida.usgs.gov/gdp/)
+* Websearches for OPeNDAP datasets (e.g., [apdrc website](http://apdrc.soest.hawaii.edu/data/data.php))
+![apdrc datasets](images/apdrc_data.png)
 
 
 ## Overview
+geoknife concepts:
+```{r, echo=T, eval=F}
+geoknife(stencil, fabric, knife)
+```
+* `stencil`: the "feature" (lake, watershed, point, state, etc)
+* `fabric`: the web available gridded data to be processed
+* `knife`: processing configuration
 
+## Stencil
+A stencil can be defined in a number of different ways:  
+
+* a numeric vector of lon, lat (`simplegeom` class)
+```{r, echo=T, eval=F}
+stencil = c(-89, 46)
+```
+* an R `data.frame()` (`simplegeom` class)
+```{r, echo=T, eval=F}
+stencil = data.frame('point1'=c(-89, 46), 'point2'=c(-88.6, 45.2))
+```
+* web available data (`webgeom` class)
+```{r, echo=T, eval=F}
+stencil = webgeom('state::New Hampshire,Wisconsin')
+stencil = webgeom('ecoregion::Colorado Plateaus,Driftless Area')
+```
 
 ## NWIS Overview (US Geological Survey water data)
 
