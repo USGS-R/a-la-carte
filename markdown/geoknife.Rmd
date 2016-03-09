@@ -65,7 +65,7 @@ What does `geoknife` do to the data?
 What does `geoknife` do to the data?
 
 * `geoknife` subsets and/or summarizes data on a webserver, and let's you know when it is complete
-![data summary and data subset](images/summary_subset.png)
+<img src="images/summary_subset.png" width="100%" />
 
 
 ## Introduction
@@ -74,7 +74,7 @@ How to discover datasets?
 * Using the `geoknife` `query()` function (examples to follow)
 * Searching the [GDP catalog](http://cida.usgs.gov/gdp/)
 * Websearches for OPeNDAP datasets (e.g., [apdrc website](http://apdrc.soest.hawaii.edu/data/data.php))
-![apdrc datasets](images/apdrc_data.png)
+<img src="images/apdrc_data.png" width="100%" />
 
 
 ## Overview
@@ -97,11 +97,21 @@ stencil = c(-89, 46)
 ```{r, echo=T, eval=F}
 stencil = data.frame('point1'=c(-89, 46), 'point2'=c(-88.6, 45.2))
 ```
-* web available data (`webgeom` class)
+* from `sp::SpatialPolygons` class from a local shapefile
+This is a hack right now, so I am not going to show it. But suggest it [here](https://github.com/USGS-R/geoknife/issues) if you want it.
+* web available data (`webgeom` class) that are quickstart
 ```{r, echo=T, eval=F}
 stencil = webgeom('state::New Hampshire,Wisconsin')
 stencil = webgeom('ecoregion::Colorado Plateaus,Driftless Area')
 ```
+* web available data (`webgeom` class) from a shapefile that you have uploaded
+```{r, echo=T, eval=F}
+stencil = webgeom(geom="upload:CIDA_TEST_", attribute = "Letter", value= "C")
+```
+
+## Stencil
+all things that can be coerced into a `simplegeom` or `webgeom` can 
+
 
 ## NWIS Overview (US Geological Survey water data)
 
