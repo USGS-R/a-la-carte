@@ -67,6 +67,7 @@ What does `geoknife` do to the data?
 * `geoknife` subsets and/or summarizes data on a webserver, and let's you know when it is complete
 ![data summary and data subset](images/summary_subset.png)
 
+
 ## Introduction
 How to discover datasets?
 
@@ -77,7 +78,30 @@ How to discover datasets?
 
 
 ## Overview
+geoknife concepts:
+```{r, echo=T, eval=F}
+geoknife(stencil, fabric, knife)
+```
+* `stencil`: the "feature" (lake, watershed, point, state, etc)
+* `fabric`: the web available gridded data to be processed
+* `knife`: processing configuration
 
+## Stencil
+A stencil can be defined in a number of different ways:  
+
+* a numeric vector of lon, lat (`simplegeom` class)
+```{r, echo=T, eval=F}
+stencil = c(-89, 46)
+```
+* an R `data.frame()` (`simplegeom` class)
+```{r, echo=T, eval=F}
+stencil = data.frame('point1'=c(-89, 46), 'point2'=c(-88.6, 45.2))
+```
+* web available data (`webgeom` class)
+```{r, echo=T, eval=F}
+stencil = webgeom('state::New Hampshire,Wisconsin')
+stencil = webgeom('ecoregion::Colorado Plateaus,Driftless Area')
+```
 
 ## NWIS Overview (US Geological Survey water data)
 

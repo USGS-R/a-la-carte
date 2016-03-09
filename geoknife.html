@@ -200,6 +200,39 @@ read more about <code>geoknife</code>:<br/>
 
 </article></slide><slide class=''><hgroup><h2>Overview</h2></hgroup><article  id="overview" class="smaller ">
 
+<p>geoknife concepts:</p>
+
+<pre class = 'prettyprint lang-r'>geoknife(stencil, fabric, knife)</pre>
+
+<ul>
+<li><code>stencil</code>: the &quot;feature&quot; (lake, watershed, point, state, etc)</li>
+<li><code>fabric</code>: the web available gridded data to be processed</li>
+<li><code>knife</code>: processing configuration</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Stencil</h2></hgroup><article  id="stencil" class="smaller ">
+
+<p>A stencil can be defined in a number of different ways:</p>
+
+<ul>
+<li>a numeric vector of lon, lat (<code>simplegeom</code> class)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>stencil = c(-89, 46)</pre>
+
+<ul>
+<li>an R <code>data.frame()</code> (<code>simplegeom</code> class)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>stencil = data.frame(&#39;point1&#39;=c(-89, 46), &#39;point2&#39;=c(-88.6, 45.2))</pre>
+
+<ul>
+<li>web available data (<code>webgeom</code> class)</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>stencil = webgeom(&#39;state::New Hampshire,Wisconsin&#39;)
+stencil = webgeom(&#39;ecoregion::Colorado Plateaus,Driftless Area&#39;)</pre>
+
 </article></slide><slide class=''><hgroup><h2>NWIS Overview (US Geological Survey water data)</h2></hgroup><article  id="nwis-overview-us-geological-survey-water-data" class="smaller ">
 
 <ul>
