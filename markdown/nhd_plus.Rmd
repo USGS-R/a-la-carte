@@ -1,6 +1,6 @@
 ---
-title: "NHD+"
-author: "<b>USGS</b>: Emily K Read"
+title: "National Map Products: NHD and NHD+"
+author: "<b>USGS</b>: Emily K Read & Dave Blodgett"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 knit: (function(inputFile, encoding) { 
       out_dir <- 'test';
@@ -18,11 +18,79 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Introduction
 
-NHD is a thing
+## Overview of USGS National Map
+##### [The National Map](http://nationalmap.gov/#) includes orthoimagery (aerial photographs), elevation, geographic names, hydrography, boundaries, transportation, structures, and land cover.
 
-## new slide
 
-here is a pic
-![model output](images/GLM_Diagram_lowres.jpg)
+1. [Nat'l Map FAQs](http://www.usgs.gov/faq/categories/9854)
+2. [Nat'l Map REST services](http://services.nationalmap.gov/arcgis/rest/services)
+3. [Nat'l Map Download client](http://viewer.nationalmap.gov/basic/)
+<p align="center">
+  <img src="../images/theNatlMap.png" style="width: 325px;" align="right"/>
+</p>
+
+
+## USGS National Hydrography Dataset (NHD)
+### a.k.a. 'the blue lines'
+
+1. Primary purpose: to portray water on The National Map (non-directed network)
+2. Drainage network including rivers, streams, canals, lakes, ponds, coastline, dams, and streamgages
+3. Available in 1:1,000,000; 1:100,000 ('medium res'); and 1:24,000 ('high res' or 'local res').
+3. Used in conjunction with USGS Watershed Boundary Dataset, and 3D Elevation Program (3DEP) to create the NHD+
+<p align="center">
+  <img src="../images/NHDpage.png" style="width: 250px;" align="right"/>
+</p>
+
+[NHD and WBD FAQs](http://nhd.usgs.gov/Frequently+Asked+Questions+about+the+NHD+&+WBD.pdf)
+
+##NHD
+<img src="../images/NHD.png" style="width: 800px;" align="center"/>
+
+## Access NHD
+<p align="center">
+  <img src="../images/accessNHD1.png" style="width: 300px;" align="right"/>
+</p>
+1. [Download from nhd.usgs.gov](http://nhd.usgs.gov/index.html)
+2. [K. Bocinsky's FedData R package](https://cran.r-project.org/web/packages/FedData/index.html)
+3. [Nat'l Map REST services](http://services.nationalmap.gov/arcgis/rest/services)
+4. [Nat'l Map Download client](http://viewer.nationalmap.gov/basic/)
+
+  <img src="../images/FedData.png" style="width: 300px;" align="right"/>
+
+*"Can I deal with NHD in the cloud?"*
+
+##NHD+
+1. NHDPlus is an integrated suite of application-ready geospatial data sets that incorporate many of the best features of the National Hydrography Dataset (NHD), the National Elevation Dataset (NED), and the Watershed Boundary Dataset (WBD).
+2. NHD+ V2 available for 1:100,000 NHD; high-res NHD+ in development
+3. USGS and EPA contract Horizon Systems to build and maintain [NHD+](http://www.horizon-systems.com/nhdplus/)
+
+
+##How is the NHD+ made?
+
+<img src="../images/NHDcatch.png" style="width: 257px;" align="right"/>
+<img src="../images/WBDHUC12.png" style="width: 250px;" align="right"/>
+<img src="../images/NHD.png" style="width: 254px;" align="right"/>
+
+Some rules apply
+
+1.  Reaches are directed, and each reach has 0 or 1 inlet and exactly 1 outlet
+2.  NHD+ catchments are 1:1 for each internodal NHD reach
+3.  To generate the NHD+, 'hydroenforcement' is applied: Water must flow along flow lines
+4.  WBD is used to define the upstream boundary for NHD+ headwater catchments
+5.  Digital elevation is used to define NHD+ catchment 'walls' 
+
+
+##Access NHD+ and learn more
+
+[Data download from NHD+ V2 Horizon Systems](http://www.horizon-systems.com/NHDPlus/NHDPlusV2_data.php)
+
+[NHD+ documentation](http://www.horizon-systems.com/NHDPlus/NHDPlusV2_documentation.php)
+
+##NHD and NHD+ discussion
+###Share your expertise
+
+1. How do you access NHD data?
+
+
+2. How do you access NHD+ data?

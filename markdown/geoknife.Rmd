@@ -15,7 +15,8 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+options(width=65)
+knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)
 library(geoknife)
 gconfig(wps.url='http://cida-test.er.usgs.gov/gdp/process/WebProcessingService')
 ```
@@ -64,13 +65,6 @@ What does `geoknife` do to the data?
 ![web workflow](images/web_workflow.png)
 
 ## Introduction
-What does `geoknife` do to the data?
-
-* `geoknife` subsets and/or summarizes data on a webserver, and let's you know when it is complete
-<img src="images/summary_subset.png" width="100%" />
-
-
-## Introduction
 How to discover datasets?
 
 * Using the `geoknife` `query()` function (examples to follow)
@@ -96,6 +90,16 @@ geoknife(stencil, fabric, knife)
 
 <img src="images/geoknife_knife.png" width="20%" />
 
+## Overview
+geoknife concepts:
+```{r, echo=T, eval=F}
+geoknife(stencil, fabric, knife)
+```
+* `geoknife` uses the `stencil`, `fabric` and `knife` to subset and/or summarize data on a webserver and deliver the result back to you. 
+
+<img src="images/summary_subset.png" width="100%" />
+
+
 ## Stencil
 A stencil can be defined in a number of different ways:  
 
@@ -110,6 +114,7 @@ stencil = data.frame('point1'=c(-89, 46), 'point2'=c(-88.6, 45.2))
 * as a `sp::SpatialPolygons` class from a local shapefile  
 
 This is kind of a a hack right now, so I am not going to show it. But suggest it [here](https://github.com/USGS-R/geoknife/issues) if you want it.
+
 * web available data (`webgeom` class) that are quickstart
 ```{r, echo=T, eval=F}
 stencil = webgeom('state::New Hampshire,Wisconsin')
@@ -122,10 +127,12 @@ stencil = webgeom(geom="upload:CIDA_TEST_", attribute = "Letter", value= "C")
 
 ## Stencil
 Note the main difference between `simplegeom` and `webgeom` is their location/reference. 
+
 * `simplegeom` is something that exists in your R environment
 * `webgeom` is a web resource, using the Web Feature Service standard
 
 In my workflows, I tend to use both: 
+
 `simplegeoms` for point collections (lon, lat)
 ```{r, echo=T, eval=F}
 stencil = data.frame('point1'=c(-89, 46), 'point2'=c(-88.6, 45.2))
@@ -136,8 +143,8 @@ stencil = webgeom('HUC8::09020306,14060009')
 ```
 BTW, `webgeom('HUC8::09020306,14060009')` is equivalent to:
 ```{r, echo=T, eval=F}
-stencil = webgeom(geom = 'derivative:wbdhu8_alb_simp',
-                  attribute = 'HUC_8',
+stencil = webgeom(geom = 'derivative:wbdhu8_alb_simp',  
+                  attribute = 'HUC_8',  
                   values = c('09020306', '14060009'))
 ```
 `geoknife` has some "quickstart" references that simplify syntax for common stencils and fabric
@@ -170,7 +177,7 @@ webdata()
 ## Fabric
 You can define values for those fields when creating `webdata`:
 ```{r, echo=T}
-fabric = webdata(url = 'http://cida.usgs.gov/thredds/dodsC/prism_v2',
+fabric = webdata(url = 'http://cida.usgs.gov/thredds/dodsC/prism_v2',  
         times = c('1990-01-01','2010-01-01'),
         variables = c('ppt','tmx'))
 fabric
@@ -296,7 +303,7 @@ webdatasets[61:65]
 ```
 
 ## finding things
-Methods for the dataset groups (of class `datagroup`) include `title`, `abstract`, and `[`
+Methods for the dataset groups (of class `datagroup`) include `title` and `abstract`
 ```{r, echo=T}
 title(webdatasets[87])
 abstract(webdatasets[87])
@@ -336,10 +343,33 @@ july.idx <- months(sst$DateTime) == 'July'
 plot(sst$DateTime[july.idx], sst$caspian.sea[july.idx], type='l', 
      lwd=2, col='dodgerblue', ylab='Sea Surface Temperature (degC)',xlab=NA)
 ```
-```{r, echo=FALSE, fig.height=3, fig.width=6}
+```{r, echo=FALSE, fig.height=2.8, fig.width=8}
 load(system.file('extdata', 'sst_result.RData', package = 'geoknife'))
 head(sst, 2)
 july.idx <- months(sst$DateTime) == 'July'
-par(mar=c(2,4,.5,.5))
+par(mar=c(2,4,0,0))
 plot(sst$DateTime[july.idx], sst$caspian.sea[july.idx], type='l', lwd=2, col='dodgerblue', ylab='Sea Surface Temperature (degC)',xlab=NA)
 ```
+
+
+## geoknife in action
+For our lake modeling activities, we use `geoknife` to create driver data for each lake we are modeling, and also to extract land-cover data from the NLCD that is in the buffer of each lake (for wind sheltering).
+
+Alternatively, there are some examples in our [geoknife paper](http://onlinelibrary.wiley.com/doi/10.1111/ecog.01880/full) and our [geoknife blog post](http://www.ecography.org/blog/slicing-gridded-data-geoknife)
+
+Looking at PRISM data for ecoregion:
+<img src="images/prism_ecoregions.png" width="70%" />
+
+## geoknife in action
+
+For our lake modeling activities, we use `geoknife` to create driver data for each lake we are modeling, and also to extract land-cover data from the NLCD that is in the buffer of each lake (for wind sheltering).
+
+Alternatively, there are some examples in our [geoknife paper](http://onlinelibrary.wiley.com/doi/10.1111/ecog.01880/full) and our [geoknife blog post](http://www.ecography.org/blog/slicing-gridded-data-geoknife)
+
+And plotting time series data:
+<img src="images/prism_timeseries.png" width="80%" />
+
+## geoknife for the script averse
+<p align="center">
+  <a href="http://cida.usgs.gov/gdp/"><img src="../images/GDP_screen.png" alt="Geo Data Portal" align="center" width="90%"/></a>
+</p>
