@@ -163,9 +163,6 @@ pander(df)
 
 </div>
 
-The next 3 sections will show examples of using a few of `dataRetrieval`'s basic functions.
-
-Following those basic examples, more complicated queries using `dataRetrival`'s more advanced functions will be introduced.
 
 ## USGS Basic Web Retrievals: readNWISuv
 
@@ -373,12 +370,64 @@ gp
 
 ```
 
+## Multiple site and parameters (cont.)
 
-##  Time/Time zone discussion
+To demonstrate the power of `tidyr` + `dplyr` + `ggplot2` + `dataRetrieval`:
 
-    
+```{r echo=TRUE, eval=FALSE}
+sites <- c("05427850","05427718","05428000","05427880") 
+pCodes <- c("00060","00010","00055","00065") 
+
+wideMulti <- readNWISuv(sites,pCodes, "2016-03-01","2016-03-08") %>%
+         select(-ends_with("_cd")) 
+
+paramInfo <- attr(wideMulti, "variableInfo")
+
+longMulti <- gather(wideMulti, variable, value, -site_no, -dateTime) %>%
+         mutate(variable = as.factor(variable))
+
+levels(longMulti$variable) <- paramInfo$param_units
+
+gp <- ggplot(longMulti, 
+             aes(dateTime, value, color=site_no)) +
+  geom_line() + xlab("") + ylab("") +
+  facet_grid(variable ~ .,scales= "free")
+gp
+
+```
+
+## Multiple site and parameters (cont.)
+
+To demonstrate the power of `tidyr` + `dplyr` + `ggplot2` + `dataRetrieval`:
+
+```{r echo=FALSE, eval=TRUE, fig.height=6, warning=FALSE}
+sites <- c("05427850","05427718","05428000","05427880") 
+pCodes <- c("00060","00010","00055","00065") 
+
+wideMulti <- readNWISuv(sites,pCodes, "2016-03-01","2016-03-08") %>%
+         select(-ends_with("_cd")) 
+
+paramInfo <- attr(wideMulti, "variableInfo")
+
+longMulti <- gather(wideMulti, variable, value, -site_no, -dateTime) %>%
+         mutate(variable = as.factor(variable))
+
+levels(longMulti$variable) <- paramInfo$param_units
+
+gp <- ggplot(longMulti, 
+             aes(dateTime, value, color=site_no)) +
+  geom_line() + xlab("") + ylab("") +
+  facet_grid(variable ~ .,scales= "free")
+gp
+
+```
+
+
 ##  USGS Advanced Retrievals: readNWISdata
 
+This is all great when you know your site numbers.
+
+What do you do when you don't?
 
     
 ## Water Quality Portal
@@ -386,6 +435,9 @@ gp
 [Water Quality Portal](http://www.waterqualitydata.us/)
 
 <img src="../images/WQP.png" alt="Overview" style="width: 300px;"/>
+
+
+##  Time/Time zone discussion
 
 
 ## Verbose and Progress
