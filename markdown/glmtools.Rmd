@@ -67,18 +67,30 @@ GLMr holds the current version of the "General Lake Model",
 and can run the model on all platforms (windows, mac, linux)
 directly from R
 
-## GLMr
+## Installation
 
-<div style="text-align: center; width: 100%;"><span class=large>GLMr Code in R:</span></div>
+`glmtools` is available on the GRAN repository. 
 
-```{r, eval=TRUE}
+```{r echo=TRUE, eval=FALSE}
+install.packages(c("GLMr", "glmtools"), 
+                 repos=c("http://owi.usgs.gov/R",
+                         getOption("repos")))
+```
+
+More information can be found [here](http://owi.usgs.gov/R/gran.html).
+
+## GLMr {.smaller .columns-2}
+
+GLMr Code in R:
+
+```{r echo=TRUE, eval=FALSE}
 library(GLMr) 
 
 glm_version()
 
 nml_template_path()
 ```
-<div style="text-align: left; width: 100%;"><span class=large>   Explanation</span></div>
+Explanation
 
  - load the GLMr package in R  
 
@@ -88,12 +100,12 @@ nml_template_path()
 
 ## GLMr
 
-
-
-```{r, eval=FALSE}
+GLMr Code in R:
+```{r, echo=TRUE, eval=FALSE}
 run_glm(sim_folder)
 ```
-```{r, eval=FALSE}
+
+```{r,  echo=TRUE, eval=FALSE}
        ------------------------------------------------
        |  General Lake Model (GLM)   Version 2.1.8    |
        ------------------------------------------------
@@ -112,9 +124,8 @@ No diffuser data, setting default values
 simulation complete. 
 
 ```
-
-
  - run the GLM model on your computer
+
  
 ## GLMr
 
