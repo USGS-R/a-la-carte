@@ -15,7 +15,9 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+options(width=60)
+knitr::opts_chunk$set(echo = TRUE, tidy = TRUE)
+library(glmtools)
 ```
 
 ## Introduction
@@ -27,24 +29,28 @@ Goals for Part II of today's workshop
 * **What's next?**: linking lake models to catchment hydrology
 
 ## Lake modeling overview
-![lake schematic](images/lake_schematic.png)
+<p align="center">
+  <img src="../images/lake_schematic.png" alt="lake schematic" align="center" style="width: 80%;"/>
+</p>
 
 ## Lake modeling overview
-![model output](images/test_figure.png)
+<img src="../images/temperature.png" alt="lake temperature" align="center" style="width: 90%;"/>
 
 
 ## GLM
 <div class="indent large">GLM "General Lake Model"</div>
 <div class="indent large">Authors: Matthew R Hipsey, Louise C Bruce, David P Hamilton</div>
-<div class="indent large">Location: <a target="_blank" title="GLM website" href="http://aed.see.uwa.edu.au/research/models/GLM/">http://aed.see.uwa.edu.au/research/models/GLM/</a></div>
+<div class="indent large">Location: [GLM website](http://aed.see.uwa.edu.au/research/models/GLM/)</div>
 
 The GLM model has been developed as an initiative of the Global Lake Ecological Observatory Network (GLEON) and in collaboration with the Aquatic Ecosystem Modelling Network (AEMON) that started in 2010. The model was first introduced in Leipzig at the 2nd Lake Ecosystem Modelling Symposium in 2012, and has since developed rapidly with application to numerous lakes within the GLEON network and beyond.
 
 Source code available at
-http://github.com/GLEON/GLM-source
+[http://github.com/GLEON/GLM-source](http://github.com/GLEON/GLM-source)
 
 ## GLM overview
-![model output](images/GLM_Diagram_lowres.jpg)
+<p align="center">
+  <img src="../images/GLM_Diagram_lowres.jpg" alt="model output" align="center" style="width: 100%;"/>
+</p>
 
 ## GLM overview
 ![glm directory](images/glm_dir.png)
@@ -61,7 +67,7 @@ http://github.com/GLEON/GLM-source
 <div class="indent large">GLMr R package</div>
 <div class="indent large">Maintainer: Luke A Winslow  </div>
 <div class="indent large">Authors: Luke A Winslow, Jordan S Read  </div>
-<div class="indent large">Location: <a target="_blank" title="glmtools on github" href="https://github.com/GLEON/GLMr">https://github.com/GLEON/GLMr</a></div>
+<div class="indent large">Location: [https://github.com/GLEON/GLMr](https://github.com/GLEON/GLMr)</div>
 
 GLMr holds the current version of the "General Lake Model",  
 and can run the model on all platforms (windows, mac, linux)
@@ -79,7 +85,7 @@ install.packages(c("GLMr", "glmtools"),
 
 More information can be found [here](http://owi.usgs.gov/R/gran.html).
 
-## GLMr {.smaller .columns-2}
+## GLMr
 
 GLMr Code in R:
 
@@ -100,12 +106,14 @@ Explanation
 
 ## GLMr
 
-GLMr Code in R:
+GLMr Code in R:  
+
+ - run the GLM model on your computer
 ```{r, echo=TRUE, eval=FALSE}
 run_glm(sim_folder)
 ```
 
-```{r,  echo=TRUE, eval=FALSE}
+```
        ------------------------------------------------
        |  General Lake Model (GLM)   Version 2.1.8    |
        ------------------------------------------------
@@ -124,16 +132,16 @@ No diffuser data, setting default values
 simulation complete. 
 
 ```
- - run the GLM model on your computer
+
 
  
 ## GLMr
 
-<div style="text-align: center; width: 100%;"><span class=large>GLMr Code in R:</span></div>
 ```{r}
 citation('GLMr')
 ```
-<div style="text-align: left; width: 100%;"><span class=large>   Explanation</span></div>
+
+Explanation
 
  - Get the current citation for GLM
 
@@ -148,11 +156,10 @@ glmtools includes basic functions for calculating physical derivatives and therm
 
 ## glmtools section 1
 
-<span class=large>**Goals**
- - **understand model inputs**  
- - **run model**
- - **visualize results**
-  </span>
+**Goals**  
+ - *understand model inputs*  
+ - *run model*  
+ - *visualize results*  
 
 ## glmtools model inputs: parameters
 
@@ -164,42 +171,24 @@ any empty directory you want
 ```{r}
 library(glmtools)
 ```
-```{r}
+```{r, echo=TRUE}
 tmp_run_dir = file.path(tempdir(), 'glm_egs')
 tmp_run_dir
 dir.create(tmp_run_dir)
 
 ```
- > Navigate to that directory in your file finder
+ - Navigate to that directory in your file finder
   
 ## glmtools run example simulation
 Now run the `run_example_sim` command and see the files created
-```{r}
+```{r, echo=TRUE}
 run_example_sim(tmp_run_dir, verbose=FALSE)
-
 ```
 You should have a directory that looks like this
 
 ![example GLM files](images/example_sim_files.png)
 
-## glmtools model inputs: parameters
-
-<div style="text-align: center; width: 100%;"><span class=large>glmtools Code in R:</span></div>
-```{r}
-library(glmtools)
-```
-
-```{r}
-nml_file <- file.path(tmp_run_dir, 'glm2.nml')
-```
-
-```{r} 
-nml <- read_nml(nml_file)
-print(nml) 
-```
-
-<div style="text-align: left; width: 100%;"><span class=large>   Explanation</span></div>
-
+## glmtools model inputs: parameters 
  - load glmtools  
  
  - specify location of glm.nml file  
@@ -207,70 +196,64 @@ print(nml)
  - read glm.nml file into R  
  
  - print (view) the contents of the nml file
- 
+```{r}
+library(glmtools)
+nml_file <- file.path(tmp_run_dir, 'glm2.nml')
+nml <- read_nml(nml_file)
+nml
+```
+
 ## glmtools model inputs: parameters
-<div style="text-align: center; width: 100%;"><span class=large>glmtools Code in R:</span></div>
+ - get values for specific parameters 
+ 
 ```{r}
 get_nml_value(nml,'sim_name')
 get_nml_value(nml,'Kw')
 ```
 
-<div style="text-align: left; width: 100%;"><span class=large>   Explanation</span></div>
-
- - get values for specific parameters 
  
 ## glmtools model inputs: meteorological drivers
 
-<div style="text-align: center; width: 100%;"><span class=large>glmtools Code in R:</span></div>
-
-```{r, plot_meteo, fig.width=18, fig.height=9}
+ - plot meteorological drivers for simulation  
+ 
+```{r, plot_meteo}
 plot_meteo(nml_file)
 ```
 
-<div style="text-align: left; width: 100%;"><span class=large>   Explanation</span></div>
- - plot meteorological drivers for simulation
- 
+
 ## glmtools run model
 
-<div style="text-align: center; width: 100%;"><span class=large>glmtools Code in R:</span></div>
+ - set simulation folder for GLM  
+ 
+ - run GLM model
 ```{r}
 basename(tmp_run_dir)
-```
-```{r}
 run_glm(tmp_run_dir)
 
 ```
 
-<div style="text-align: left; width: 100%;"><span class=large>   Explanation</span></div>
- - set simulation folder for GLM  
- 
- - run GLM model
- 
 ## glmtools visualize results
-<div style="text-align: center; width: 100%;"><span class=large>glmtools Code in R:</span></div>
-
-```{r}
-nc_file <- file.path(tmp_run_dir,'output.nc')
-```
-```{r, plot_temp, fig.width=12, fig.height=7}
-plot_temp(file = nc_file, fig_path = FALSE)
-```
-
-<div style="text-align: left; width: 100%;"><span class=large>   Explanation</span></div>
  - set output results file  
  
  - plot water temperatures
- 
+```{r}
+nc_file <- file.path(tmp_run_dir,'output.nc')
+```
+```{r}
+plot_temp(file = nc_file, fig_path = '../images/temperature.png')
+```
+<img src="../images/temperature.png" alt="lake temperature" align="center" style="width: 90%;"/>
+
 ## glmtools section 2
-<span class=large>**Goals**
- - **validate/evaluate model outputs**
- - **modify model parameters**  
- - **run simulation with modified parameters**
- </span>
- 
+**Goals**  
+ - *validate/evaluate model outputs*  
+ - *modify model parameters*  
+ - *run simulation with modified parameters*  
+
 ## glmtools: modify model parameters
 
-<div style="text-align: center; width: 100%;"><span class=large>glmtools Code in R:</span></div>
+ - change parameter value  
+ - view nml with change
 ```{r}
 nml <- set_nml(nml, arg_name = 'Kw', 
           arg_val = 1.05)
@@ -279,36 +262,52 @@ nml <- set_nml(nml, arg_name = 'Kw',
 print(nml)
 ```
 
-<div style="text-align: left; width: 100%;"><span class=large>   Explanation</span></div>
- - change parameter value  
-</br>
- - view nml with change
  
 ## glmtools: re-run simulation
 
-div style="text-align: center; width: 100%;"><span class=large>glmtools Code in R:</span></div>
-```{r}
-write_nml(glm_nml = nml, file = nml_file)
-```
-```{r}
-run_glm(tmp_run_dir)
-```
-
-<div style="text-align: left; width: 100%;"><span class=large>   Explanation</span></div>
  - write changed glm.nml to file  
  
  - run GLM model
- 
-## glmtools: visualize result
-<div style="text-align: center; width: 100%;"><span class=large>glmtools Code in R:</span></div>
 ```{r}
-nc_file <- file.path(tmp_run_dir,'output.nc')
-```
-```{r, plot_temp2, fig.width=12, fig.height=7}
-plot_temp(file = nc_file, fig_path = FALSE)
+write_nml(glm_nml = nml, file = nml_file)
+
+run_glm(tmp_run_dir)
 ```
 
-<div style="text-align: left; width: 100%;"><span class=large>   Explanation</span></div>
+ 
+## glmtools: visualize result
  - double check nc_file path
  
  - quickly visualize new temps
+```{r}
+nc_file <- file.path(tmp_run_dir,'output.nc')
+plot_temp(file = nc_file, fig_path = '../images/temperature2.png')
+```
+
+<img src="../images/temperature2.png" alt="lake temperature" align="center" style="width: 90%;"/>
+
+## glmtools: visualize result
+ 
+ - find simulation variables
+
+```{r}
+sim_vars(file = nc_file)
+```
+
+## glmtools: visualize result 
+
+ - quickly visualize other variables
+ 
+```{r}
+plot_var(file = nc_file, var_name = 'u_mean', fig_path = '../images/velocity.png')
+```
+<img src="../images/velocity.png" alt="mean velocity" align="center" style="width: 90%;"/>
+
+## glmtools: visualize result 
+
+ - quickly compare to field data
+```{r, eval=FALSE, results='hide'}
+field_file <- file.path(tmp_run_dir, 'field_data.tsv')
+plot_var_compare(nc_file, field_file, 'temp', resample=TRUE, fig_path = '../images/temp_compare.png')
+```
+<img src="../images/temp_compare.png" alt="lake temperature" align="center" style="width: 60%;"/>
