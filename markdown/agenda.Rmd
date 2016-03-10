@@ -24,7 +24,7 @@ output: markdowntemplates::skeleton
 |  2-2:30pm | Estimate constituent loading to streams / lakes  | [rLoadest](https://github.com/USGS-R/rloadest), [WRTDS](https://cran.r-project.org/web/packages/EGRET/index.html)  | No  | [Laura DeCicco](http://cida.usgs.gov/people/ldecicco.html)  |   
 |  2:30-2:45pm | Break  |   |   |   |   
 |  2:45-3:45pm | [Hydrodynamic modeling with GLM](http://usgs-r.github.io/a-la-carte/glmtools.html)  | GLM, [GLMr](https://github.com/GLEON/GLMr), [glmtools](https://github.com/USGS-R/glmtools)  | Lake  | [Jordan Read](http://cida.usgs.gov/people/jread.html), [Luke Winslow](http://cida.usgs.gov/people/lwinslow.html)  |   
-|  3:45-4:15pm | Distributing computing  | [HTCondor](https://research.cs.wisc.edu/htcondor/)  | No  | [Luke Winslow](http://cida.usgs.gov/people/lwinslow.html) |   
+|  3:45-4:15pm | [Distributing computing](http://usgs-r.github.io/a-la-carte/htcondor.pptx)  | [HTCondor](https://research.cs.wisc.edu/htcondor/)  | No  | [Luke Winslow](http://cida.usgs.gov/people/lwinslow.html) |   
 |  4:15-4:45pm | Final discussion and wrap up  |   |   |   |  
 
 ###For remote participants
