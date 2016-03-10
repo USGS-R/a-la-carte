@@ -29,6 +29,10 @@ EGRET includes statistics and graphics for streamflow history, water quality tre
 
 A very complete document can be found [HERE](http://pubs.usgs.gov/tm/04/a10/)
 
+Weighted Regressions on Time, Discharge, and Season:
+
+$$ \ln(c)= \beta_0+\beta_1{DecTime}+\beta_2{\ln{Q}}+\beta_3 \sin(2\pi{DecTime})+\beta_4 \cos(2\pi{DecTime})+\epsilon $$
+
 ## EGRET Installation
 
 `EGRET` is available on the CRAN repository. The CRAN version is the most stable and user-tested:
