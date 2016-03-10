@@ -420,7 +420,7 @@ levels(longMulti$site_no) <- siteInfo$station_nm
 
 gp <- ggplot(longMulti, 
              aes(dateTime, value, color=site_no)) +
-  geom_line(size=1.5) + xlab("") + ylab("") +
+  geom_line() + xlab("") + ylab("") +
   facet_grid(variable ~ .,scales= "free") + 
   theme(legend.title=element_blank(),
         legend.position='bottom',legend.direction = "vertical")
@@ -473,7 +473,9 @@ phWI <- readNWISdata(stateCd="WI", service="site",
 phWI.1 <- filter(phWI, parm_cd %in% pCode) %>%
             filter(count_nu > 300) %>%
             mutate(period = as.Date(end_date) - as.Date(begin_date)) %>%
-            filter(period > 15*365)
+            filter(period > 15*365) %>%
+            arrange(-count_nu)
+
 datatable(phWI.1[,c("site_no","station_nm","data_type_cd","begin_date","end_date","count_nu")],rownames = FALSE, 
             options = list(pageLength = 10))
 ```
@@ -490,7 +492,7 @@ leaflet() %>%
                    popup=phWI.1$station_nm)
         
 ```
-
+    
     
 ##  More readNWISdata examples     
     
@@ -533,10 +535,162 @@ meas <- readNWISdata(state_cd="WI",service="measurements",format="rdb_expanded")
 * Much more verbose output than NWIS
 
 * To get non-NWIS data, need to use CharacteristicName instead of parameter code.
+    + Need to be careful of units
+    + Need to be careful of censored values
+    + Dissolved vs filtered vs ....etc....
 
 <img src="../images/WQP.png" alt="Overview" style="width: 300px;"/>
 
 </div>
+
+## Water Quality Portal Basic Retrieval: readWQPqw
+
+Much like the convenience functions for NWIS, there's a simple function for retrievals if the site number and parameter code or characteristic name is known.
+
+```{r echo=TRUE, eval=TRUE}
+sitePH <- phWI.1$site_no[1]
+
+nwisQW <- readNWISqw(sitePH, "00665")
+ncol(nwisQW)
+
+wqpQW <- readWQPqw(paste0("USGS-",sitePH),"00665")
+ncol(wqpQW)
+
+```
+
+Explore these results in RStudio.
+
+## Censored Data: NWIS
+
+Censored data is particularly important for water quality data. Two examples of censored data are:
+*  Left-censored - the data is less than the detection level of the measurement technique
+*  Right-censored - the data is greater than the upper-limit of the measurement technique
+
+NWIS data makes identifing this data easy using the column result_cd. 
+
+```{r eval=TRUE, echo=FALSE}
+subNWIS <- select(nwisQW, startDateTime, remark_cd, result_va)
+datatable(subNWIS,rownames = FALSE, 
+            options = list(pageLength = 5))
+
+```
+
+## Censored Data: WQP
+
+There's a little more work for WQP data. The following table has renamed the columns for space considerations.
+
+```{r eval=TRUE, echo=FALSE}
+subWQP <- select(wqpQW, ActivityStartDateTime, DetectionQuantitationLimitMeasure.MeasureValue,ResultDetectionConditionText,ResultMeasureValue) %>%
+  rename(value=ResultMeasureValue) %>%
+  rename(dateTime = ActivityStartDateTime) %>%
+  rename(detectionText = ResultDetectionConditionText) %>%
+  rename(detectionLimit = DetectionQuantitationLimitMeasure.MeasureValue)
+datatable(subWQP,rownames = FALSE, 
+            options = list(pageLength = 5))
+
+```
+
+Non-NWIS data might have different ways to indicate censoring.
+
+## Water Quality Portal Retrieval: readWQPdata
+
+The true value of the Water Quality Portal is to explore water quality data from different sources. 
+
+Become familiar with the possibilities of the web services [HERE](http://www.waterqualitydata.us/)
+
+There's not a function in WQP that returns period of record information like we did above via NWIS data. The following function returns a list of sites that have collected phosphorus data in Wisconsin, but there's no way to know if that site has collected one sample, or thousands.
+
+```{r echo=TRUE, eval=FALSE}
+
+phosSites <- whatWQPsites(statecode="WI",characteristicName="Phosphorus")
+  
+```
+
+## Water Quality Portal Retrieval: readWQPdata
+
+So, to get that information, you need to actually get that data.
+
+```{r echo=TRUE, eval=FALSE}
+
+phosData <- readWQPdata(statecode="WI",characteristicName="Phosphorus")
+saveRDS(phosData, "phosData.rds")
+unique(phosData$ResultMeasure.MeasureUnitCode)
+  
+```
+
+```{r echo=FALSE, eval=TRUE}
+phosData <- readRDS("phosData.rds")
+unique(phosData$ResultMeasure.MeasureUnitCode)
+```
+
+Use a little `dplyr` to get some information:
+
+```{r eval=TRUE, echo=TRUE}
+siteInfo <- attr(phosData, "siteInfo")
+
+wiSummary <- phosData %>%
+  filter(ResultMeasure.MeasureUnitCode %in% c("mg/l","mg/l as P")) %>%
+  group_by(MonitoringLocationIdentifier) %>%
+  summarise(count=n(),
+            start=min(ActivityStartDateTime),
+            end=max(ActivityStartDateTime),
+            max = max(ResultMeasureValue, na.rm = TRUE)) %>%
+  filter(count > 300) %>%
+  arrange(-count) %>%
+  left_join(siteInfo)
+
+```
+
+## Water Quality Portal Retrieval: readWQPdata (cont.)
+
+```{r echo=TRUE, eval=FALSE}
+col_types <- c("darkblue","dodgerblue","green4","gold1","orange","brown","red")
+leg_vals <- unique(as.numeric(quantile(wiSummary$max, probs=c(0,0.01,0.1,0.25,0.5,0.75,0.9,.99,1), na.rm=TRUE)))
+pal = colorBin(col_types, wiSummary$max, bins = leg_vals)
+rad <-3*seq(1,4,length.out = 16)
+wiSummary$sizes <- rad[as.numeric(cut(wiSummary$count, breaks=16))]
+          
+leaflet(data=wiSummary) %>% 
+  addProviderTiles("CartoDB.Positron") %>%
+  addCircleMarkers(~dec_lon_va,~dec_lat_va,
+                   fillColor = ~pal(max),
+                   radius = ~sizes,
+                   fillOpacity = 0.8, opacity = 0.8,stroke=FALSE,
+                   popup=~station_nm) %>%
+  addLegend(position = 'bottomleft',
+            pal=pal,
+            values=~max,
+            opacity = 0.8,
+            labFormat = labelFormat(digits = 1), #transform = function(x) as.integer(x)),
+            title = 'Max Value')
+
+```
+
+## Water Quality Portal Retrieval: readWQPdata (cont.)
+
+```{r echo=FALSE, eval=TRUE}
+col_types <- c("darkblue","dodgerblue","green4","gold1","orange","brown","red")
+leg_vals <- unique(as.numeric(quantile(wiSummary$max, probs=c(0,0.01,0.1,0.25,0.5,0.75,0.9,.99,1), na.rm=TRUE)))
+pal = colorBin(col_types, wiSummary$max, bins = leg_vals)
+rad <-3*seq(1,4,length.out = 16)
+wiSummary$sizes <- rad[as.numeric(cut(wiSummary$count, breaks=16))]
+          
+leaflet(data=wiSummary) %>% 
+  addProviderTiles("CartoDB.Positron") %>%
+  addCircleMarkers(~dec_lon_va,~dec_lat_va,
+                   fillColor = ~pal(max),
+                   radius = ~sizes,
+                   fillOpacity = 0.8, opacity = 0.8,stroke=FALSE,
+                   popup=~station_nm) %>%
+  addLegend(position = 'bottomleft',
+            pal=pal,
+            values=~max,
+            opacity = 0.8,
+            labFormat = labelFormat(digits = 1), #transform = function(x) as.integer(x)),
+            title = 'Max Value')
+
+```
+
 
 ## Water Quality Portal Advise
 
