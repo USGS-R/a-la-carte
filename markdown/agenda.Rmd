@@ -14,17 +14,17 @@ output: markdowntemplates::skeleton
 
 |  Schedule (CST) | Task / Module  | Tools(s)  | System-specific?  | Lead  |   
 |---|---|---|---|---|
-|  9-10am | Introduction and Reproducibility  | R  | No  | Alison Appling  |   
-|  10-10:45am | [Access federal water data](http://usgs-r.github.io/a-la-carte/dataRetrieval.html)  | [dataRetrieval](https://cran.r-project.org/web/packages/dataRetrieval/index.html)  | No | Laura DeCicco  |   
+|  9-10am | [Introduction and Reproducibility](http://usgs-r.github.io/a-la-carte/best_practices.html)  | R  | No  | [Alison Appling](http://cida.usgs.gov/people/aappling.html) |   
+|  10-10:45am | [Access federal water data](http://usgs-r.github.io/a-la-carte/dataRetrieval.html)  | [dataRetrieval](https://cran.r-project.org/web/packages/dataRetrieval/index.html)  | No | [Laura DeCicco](http://cida.usgs.gov/people/ldecicco.html)  |   
 |  10:45-11am | Break  |   |   |   |   
 |  11-11:30am | [Access fed. water data, con't](http://usgs-r.github.io/a-la-carte/dataRetrieval.html)  |   |   |   |   
-|  11:30-12:30pm | [Access climate and land use data](http://usgs-r.github.io/a-la-carte/geoknife.html)  | [geoknife](https://cran.r-project.org/web/packages/geoknife/index.html)  | No  | Jordan Read, Jordan Walker |   
+|  11:30-12:30pm | [Access climate and land use data](http://usgs-r.github.io/a-la-carte/geoknife.html)  | [geoknife](https://cran.r-project.org/web/packages/geoknife/index.html)  | No  | [Jordan Read](http://cida.usgs.gov/people/jread.html), [Jordan Walker](http://cida.usgs.gov/people/jiwalker.html) |   
 |  12:30-1:30pm | Lunch  |   |   |   |   
-|  1:30-2pm | [NHD/NHD+](http://usgs-r.github.io/a-la-carte/nhd_plus.html) | ad hoc  | No  | Emily Read, Dave Blodgett  |   
-|  2-2:30pm | Estimate constituent loading to streams / lakes  | [rLoadest](https://github.com/USGS-R/rloadest), [WRTDS](https://cran.r-project.org/web/packages/EGRET/index.html)  | No  | Laura DeCicco  |   
+|  1:30-2pm | [NHD/NHD+](http://usgs-r.github.io/a-la-carte/nhd_plus.html) | ad hoc  | No  | [Emily Read](http://cida.usgs.gov/people/eread.html), [Dave Blodgett](http://cida.usgs.gov/people/dblodgett.html)  |   
+|  2-2:30pm | Estimate constituent loading to streams / lakes  | [rLoadest](https://github.com/USGS-R/rloadest), [WRTDS](https://cran.r-project.org/web/packages/EGRET/index.html)  | No  | [Laura DeCicco](http://cida.usgs.gov/people/ldecicco.html)  |   
 |  2:30-2:45pm | Break  |   |   |   |   
-|  2:45-3:45pm | [Hydrodynamic modeling with GLM](http://usgs-r.github.io/a-la-carte/glmtools.html)  | GLM, [GLMr](https://github.com/GLEON/GLMr), [glmtools](https://github.com/USGS-R/glmtools)  | Lake  | Jordan Read, Luke Winslow  |   
-|  3:45-4:15pm | Distributing computing  | [HTCondor](https://research.cs.wisc.edu/htcondor/)  | No  | Luke Winslow   |   
+|  2:45-3:45pm | [Hydrodynamic modeling with GLM](http://usgs-r.github.io/a-la-carte/glmtools.html)  | GLM, [GLMr](https://github.com/GLEON/GLMr), [glmtools](https://github.com/USGS-R/glmtools)  | Lake  | [Jordan Read](http://cida.usgs.gov/people/jread.html), [Luke Winslow](http://cida.usgs.gov/people/lwinslow.html)  |   
+|  3:45-4:15pm | Distributing computing  | [HTCondor](https://research.cs.wisc.edu/htcondor/)  | No  | [Luke Winslow](http://cida.usgs.gov/people/lwinslow.html) |   
 |  4:15-4:45pm | Final discussion and wrap up  |   |   |   |  
 
 ###For remote participants
