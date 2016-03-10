@@ -60,14 +60,14 @@ knitr::opts_chunk$set(echo = FALSE)
 *"Can I deal with NHD in the cloud?"*
 
 ##NHD+
-NHDPlus is an integrated suite of application-ready geospatial data sets that incorporate many of the best features of the National Hydrography Dataset (NHD), the National Elevation Dataset (NED), and the Watershed Boundary Dataset (WBD).USGS and EPA contract Horizon Systems to build and maintain [NHD+](http://www.horizon-systems.com/nhdplus/). The NHD+ V2 is available for 1:100,000 NHD; high-res NHD+ in development. 
+NHDPlus is an integrated suite of application-ready geospatial data sets that incorporate many of the best features of the National Hydrography Dataset (NHD), the National Elevation Dataset (NED), and the Watershed Boundary Dataset (WBD). The USGS and EPA contract Horizon Systems to build and maintain the  [NHD+](http://www.horizon-systems.com/nhdplus/). The NHD+ V2 is available for 1:100,000 NHD; high-res NHD+ in development. 
 
 ####The NHD+ has
 
 1. Flow direction, flow accumulation and elevation grids
 2. Flowline min/max elevations and slopes
 3. Flow volume & velocity estimates for each flowline in the stream network
-4. and much more, including value-added spinoff products such as [StreamCat](https://www.epa.gov/national-aquatic-resource-surveys/streamcat)
+4. and much more, including value-added spinoff products such as [StreamCat](https://www.epa.gov/national-aquatic-resource-surveys/streamcat), and LakeCat (forthcoming)
 
 <img src="../images/StreamCat.png" style="width: 400px;" align="center"/>
 
