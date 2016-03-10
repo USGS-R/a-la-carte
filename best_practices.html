@@ -110,27 +110,27 @@
           </hgroup>
   </slide>
 
-<slide class=''><hgroup><h2>Upping your Analytical Game</h2></hgroup><article  id="upping-your-analytical-game">
+<slide class=''><hgroup><h2>Upping your Analytical Game</h2></hgroup><article  id="upping-your-analytical-game" class="smaller ">
 
 <h3>Efficiency</h3>
 
-<ul>
+<ul class = 'build'>
 <li>quickly write, revise, run, and revisit your code</li>
 </ul>
 
 <h3>Transparency</h3>
 
-<ul>
+<ul class = 'build'>
 <li>let others see &amp; understand what you&#39;re doing</li>
 </ul>
 
 <h3>Reproducibility</h3>
 
-<ul>
+<ul class = 'build'>
 <li>enable anyone to run your analyses</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>Benefits</h2></hgroup><article  id="benefits">
+</article></slide><slide class=''><hgroup><h2>Benefits</h2></hgroup><article  id="benefits" class="smaller ">
 
 <ul>
 <li>implement each idea just once</li>
@@ -141,64 +141,265 @@
 <li>share with your future self</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>What makes work efficient, transparent, &amp; reproducible?</h2></hgroup><article  id="what-makes-work-efficient-transparent-reproducible">
+</article></slide><slide class=''><hgroup><h2>Analyses are reproducible when they&#39;re:</h2></hgroup><article  id="analyses-are-reproducible-when-theyre" class="smaller ">
 
-<h3>readable</h3>
+<h3>Readable</h3>
 
 <ul>
 <li>readable code</li>
 <li>traceable data flow</li>
 </ul>
 
-<h3>uncorruptible</h3>
+<h3>Self-contained</h3>
 
 <ul>
+<li>complete from data to reports</li>
+<li>dependencies are included or public</li>
+</ul>
+
+<h3>Uncorruptible</h3>
+
+<ul>
+<li>versioned code</li>
+<li>judicious redundancy</li>
 <li>automated data flow</li>
-<li>smart redundancy</li>
-<li>code versioning</li>
 </ul>
 
-<h3>self-contained</h3>
+</article></slide><slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Readable projects</h2></hgroup><article  id="readable-projects" class="smaller ">
+
+</article></slide><slide class=''><hgroup><h2>Readable code: Principles</h2></hgroup><article  id="readable-code-principles" class="smaller ">
 
 <ul>
-<li>data to reports</li>
-<li>no local dependencies</li>
-</ul>
-
-</article></slide><slide class=''><hgroup><h2>Readable code</h2></hgroup><article  id="readable-code">
-
-<ul>
-<li>code comments</li>
+<li>comments on goals &amp; rationale</li>
 <li>meaningful variable names</li>
 <li>meaningful white space</li>
 <li>clarity via conciseness</li>
-<li>decomposition (modularity)</li>
-<li>don&#39;t repeat yourself (DRY)</li>
+<li>decomposition</li>
+<li>don&#39;t repeat yourself</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>Traceable data flow</h2></hgroup><article  id="traceable-data-flow">
+</article></slide><slide class=''><hgroup><h2>Readable code: Examples</h2></hgroup><article  id="readable-code-examples" class="smaller ">
+
+<h3>Exhibit A</h3>
+
+<pre class = 'prettyprint lang-r'>for(i in seq_len(n)[-1]) {
+mu[i,d]&lt;-  X[i-1, d]+((GPP[d]/z)*(light[i,d]/(sum(light[,d]))))+ (ER[d]*0.006944/z)+
+  (K[d]/(600/(1800.6-(temp[i,d]*120.1)+(3.7818*temp[i,d]^2)-(0.047608*temp[i,d]^3)))^
+-0.5) * 0.0069444*(  ((exp(2.00907 + 3.22014 * (log((298.15-temp[i,d]) / (273.15 + 
+temp[i,d]))) + 4.0501 * (log((298.15 - temp[i,d]) / (273.15 + temp[i,d]))) ^ 2 + 
+4.94457 * (log((298.15 - temp[i,d]) / (273.15 + temp[i,d]))) ^ 3 - 0.256847 * 
+  (log((298.15 - temp[i,d]) / (273.15 + temp[i,d]))) ^ 4 + 3.88767 * (log((298.15 - 
+temp[i,d]) / (273.15 + temp[i,d]))) ^ 5)) * 1.4276 * bp / 760) *satcor-X[i-1,d] )}</pre>
+
+<h3>Exhibit B</h3>
+
+<pre class = 'prettyprint lang-r'># Compute the O2-specific reaeration coefficient for each timestep
+K &lt;- convert_k600_to_kGAS(K600.daily, temperature=temp.water, gas=&quot;O2&quot;) * frac.D
+
+# Dissolved oxygen (DO) at each time i is a function of DO at time i-1 plus
+# productivity, respiration, and reaeration
+for(i in seq_len(n)[-1]) {
+  DO.mod[i] &lt;- 
+    DO.mod[i-1] +
+    GPP[i] + 
+    ER[i] + 
+    K[i] * (DO.sat[i] - DO.mod[i-1])
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2>Traceable data flow: Principles</h2></hgroup><article  id="traceable-data-flow-principles" class="smaller ">
 
 <ul>
-<li>an undocumented system is no system</li>
-<li>redundancy is great for data storage, awful for data analysis</li>
-<li>cache intermediate data products</li>
+<li>directories should be as readable as code</li>
+<li>avoid redundancy except for caching</li>
 <li>keep it acyclical</li>
 <li>expect your workflow to evolve</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>Automated data flow</h2></hgroup><article  id="automated-data-flow">
+</article></slide><slide class=''><hgroup><h2>Traceable data flow: Simple example</h2></hgroup><article  id="traceable-data-flow-simple-example" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>    01_download.R
+    01_downloaded_data.csv
+    02_munge.R
+    02_munged_data.Rds
+    03_model.R
+    03_model_output.Rds
+    04_report.Rmd
+    04_report_doc.docx</pre>
+
+</article></slide><slide class=''><hgroup><h2>Traceable data flow: Three-step example</h2></hgroup><article  id="traceable-data-flow-three-step-example" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>+---01_data
+|       downloaded_data.csv
+|       
++---02_cache
+|       a_munged_data.Rds
+|       b_model_output.Rds
+|       
++---03_results
+|       report_doc.docx
+|       
+\---code
+        01_download.R
+        02_munge.R
+        03_model.R
+        04_report.Rmd</pre>
+
+</article></slide><slide class=''><hgroup><h2>Traceable data flow: Many-step example</h2></hgroup><article  id="traceable-data-flow-many-step-example" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>+---01_data
+|   +---code
+|   |       download.R
+|   \---out
+|           downloaded_data.csv
++---02_munge
+|   +---code
+|   |       munge.R
+|   +---doc
+|   |       probable_outliers.png
+|   +---in
+|   |       outliers_to_remove.txt
+|   \---out
+|           munged_data.Rds
++---03_model
+|   +---code
+|   |       model.R
+|   +---in
+|   |       model_config.txt
+|   \---out
+|           model_output.Rds
++---04_report
+|   +---code
+|   |       report.Rmd
+|   \---out
+|           report_doc.docx
+\---lib</pre>
+
+</article></slide><slide class=''><hgroup><h2>Traceable data flow: all about dependencies</h2></hgroup><article  id="traceable-data-flow-all-about-dependencies" class="smaller ">
+
+<p align="center">
+
+<img src="images/dependencies.png" alt="dependencies" style="width: 700px;" align="center"/>
+
+</p>
+
+</article></slide><slide class=''><hgroup><h2>Automated data flow</h2></hgroup><article  id="automated-data-flow" class="smaller ">
+
+<h3>Needs</h3>
+
+<ul>
+<li>know the file dependency structure</li>
+<li>update files when their dependencies change</li>
+<li>only update files when they need it</li>
+</ul>
+
+<p align="center">
+
+<img src="images/dependencies.png" alt="dependencies" style="width: 400px;" align="right"/>
+
+</p>
+
+<h3>Solution</h3>
 
 <ul>
 <li>use <a href='http://www.gnu.org/software/make/' title=''><code>make</code></a></li>
 </ul>
 
+</article></slide><slide class=''><hgroup><h2>make: targets</h2></hgroup><article  id="make-targets" class="smaller ">
+
+<h3>Syntax:</h3>
+
+<p><em>target: dependencies</em><br/><em>[tab] system command</em></p>
+
+<h3>Example:</h3>
+
+<pre class = 'prettyprint lang-text'>01_downloaded_data.csv: 01_download.R
+    $(R_CMD) 01_download.R`</pre>
+
+</article></slide><slide class=''><hgroup><h2>make: macros</h2></hgroup><article  id="make-macros" class="smaller ">
+
+<h3>Syntax:</h3>
+
+<p><em>VAR = value</em></p>
+
+<h3>Example:</h3>
+
+<pre class = 'prettyprint lang-text'>R_CMD = R CMD BATCH  --no-save --no-restore --slave --no-timing</pre>
+
+</article></slide><slide class=''><hgroup><h2>make: Example</h2></hgroup><article  id="make-example" class="smaller ">
+
+<pre class = 'prettyprint lang-text'># Macros
+
+R_CMD = R CMD BATCH  --no-save --no-restore --slave --no-timing
+
+# Targets
+
+all: 01_downloaded_data.csv
+
+01_downloaded_data.csv: 01_download.R makefile
+    $(R_CMD) 01_download.R</pre>
+
 <p align="center">
 
-<img src="images/remake_JR.png" alt="remake" style="width: 600px;" align="center"/>
+<img src="images/dependencies_small.png" alt="dependencies" style="width: 400px;" align="right"/>
 
 </p>
 
-</article></slide><slide class=''><hgroup><h2>Reproducible data access</h2></hgroup><article  id="reproducible-data-access">
+</article></slide><slide class=''><hgroup><h2>make: Example</h2></hgroup><article  id="make-example-1" class="smaller ">
+
+<pre class = 'prettyprint lang-text'># Macros
+
+R_CMD = R CMD BATCH  --no-save --no-restore --slave --no-timing
+
+# Targets
+
+all: 03_model_output.Rds
+
+01_downloaded_data.csv: 01_download.R makefile
+    $(R_CMD) 01_download.R
+
+02_munged_data.Rds: 02_munge.R 01_downloaded_data.csv outliers_to_remove.txt
+    $(R_CMD) 02_munge.R
+
+03_model_output.Rds: 03_model.R 02_munged_data.Rds model_config.txt
+    $(R_CMD) 03_model.R</pre>
+
+<p align="bottom">
+
+<img src="images/dependencies_medium.png" alt="dependencies" style="width: 300px;" align="right"/>
+
+</p>
+
+</article></slide><slide class=''><hgroup><h2>make: Example</h2></hgroup><article  id="make-example-2" class="smaller ">
+
+<pre class = 'prettyprint lang-text'># Macros
+
+R_CMD = R CMD BATCH  --no-save --no-restore --slave --no-timing
+R_SCRIPT = R --no-save --no-restore --no-init-file --no-site-file
+SET_R_LIBS = .libPaths(c(&#39;~/Documents/R/win-library/3.2&#39;, \
+                         &#39;C:/Program Files/R/R-3.2.2/library&#39;));
+# Targets
+
+all: 04_report_doc.docx
+
+01_downloaded_data.csv: 01_download.R makefile
+    $(R_CMD) 01_download.R
+
+02_munged_data.Rds: 02_munge.R 01_downloaded_data.csv outliers_to_remove.txt
+    $(R_CMD) 02_munge.R
+
+03_model_output.Rds: 03_model.R 02_munged_data.Rds model_config.txt
+    $(R_CMD) 03_model.R
+
+04_report_doc.docx: 04_report.Rmd 03_model_output.Rds
+    ${R_SCRIPT} -e &quot;${SET_R_LIBS} \
+                  knitr::knit(inp=&#39;04_report.Rmd&#39;, out=&#39;04_report.md&#39;)&quot;
+    pandoc 04_report.md --to docx --output 04_report_doc.docx
+
+clean:
+    rm -f *.Rout
+    rm -f 04_report.md</pre>
+
+</article></slide><slide class=''><hgroup><h2>Reproducible data access</h2></hgroup><article  id="reproducible-data-access" class="smaller ">
 
 <ul>
 <li>know your data&#39;s provenance</li>
@@ -211,7 +412,7 @@
 <li>cache a copy, but know it&#39;s fleeting</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>Reproducible quality assessment</h2></hgroup><article  id="reproducible-quality-assessment">
+</article></slide><slide class=''><hgroup><h2>Reproducible quality assessment</h2></hgroup><article  id="reproducible-quality-assessment" class="smaller ">
 
 <ul>
 <li>even highly curated data have flaws</li>
@@ -222,7 +423,7 @@
 <li>script your corrections</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>Scalable modeling</h2></hgroup><article  id="scalable-modeling">
+</article></slide><slide class=''><hgroup><h2>Scalable modeling</h2></hgroup><article  id="scalable-modeling" class="smaller ">
 
 <ul>
 <li>separate the model from the model manager</li>
@@ -232,7 +433,7 @@
 <li>expect obsolescence, so save long-lived artifacts if they&#39;ll be needed</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>GitHub</h2></hgroup><article  id="github">
+</article></slide><slide class=''><hgroup><h2>GitHub</h2></hgroup><article  id="github" class="smaller ">
 
 <ul>
 <li>collaboration - share files, manage conflicts</li>
@@ -242,13 +443,13 @@
 <li>open research is possible</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>Fisheries dataset</h2></hgroup><article  id="fisheries-dataset">
+</article></slide><slide class=''><hgroup><h2>Fisheries dataset</h2></hgroup><article  id="fisheries-dataset" class="smaller ">
 
 <p><a href='http://www.umesc.usgs.gov/data_library/fisheries/fish1_query.shtml' title=''>http://www.umesc.usgs.gov/data_library/fisheries/fish1_query.shtml</a></p>
 
 <p><a href='http://www.umesc.usgs.gov/data_library/fisheries/LTRM_FISH_DATA_ENTIRE.zip' title=''>http://www.umesc.usgs.gov/data_library/fisheries/LTRM_FISH_DATA_ENTIRE.zip</a></p>
 
-</article></slide><slide class=''><hgroup><h2>Summary</h2></hgroup><article  id="summary"></article></slide>
+</article></slide><slide class=''><hgroup><h2>Summary</h2></hgroup><article  id="summary" class="smaller "></article></slide>
 
 
   <slide class="backdrop"></slide>
