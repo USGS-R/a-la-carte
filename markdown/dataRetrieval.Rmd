@@ -528,7 +528,7 @@ meas <- readNWISdata(state_cd="WI",service="measurements",format="rdb_expanded")
 
 * Multiple agencies
     + USGS data comes from the NWIS database
-    + EPA data comes from the STORET database (this includes many state and tribal organizations)
+    + EPA data comes from the STORET database (this includes many state, tribal, NGO, and academic groups)
 
 * WQP brings data from all these oranizations together and provides it in a single format
 
