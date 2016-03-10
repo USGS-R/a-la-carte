@@ -69,11 +69,11 @@ output:
 
 ### Self-contained
 - complete from data to reports
-- dependencies are included or public
+- dependencies are included or public & documented
 
-### Uncorruptible
-- versioned code
+### Incorruptible
 - judicious redundancy
+- code versioning
 - automated data flow
 
 ```{r, include=FALSE}
@@ -82,8 +82,6 @@ output:
 # Reproducible Research = integrate your data, text, code, and results. this is
 # sometimes but not always what you want, especially with modeling
 ```
-
-# Readable projects
 
 ## Readable code: Principles
 
@@ -129,9 +127,12 @@ for(i in seq_len(n)[-1]) {
 ## Traceable data flow: Principles
 
 - directories should be as readable as code
-- avoid redundancy except for caching
-- keep it acyclical
-- expect your workflow to evolve
+- tell one convergent story
+
+<p align="center">
+  <img src="images/data_river.png" alt="dependencies" style="width: 700px;" align="center"/>
+</p>
+
 
 ## Traceable data flow: Simple example
 
@@ -198,17 +199,179 @@ for(i in seq_len(n)[-1]) {
 \---lib
 ```
 
-## Traceable data flow: all about dependencies
+## Traceable data flow: Principles
+
+- directories should be as readable as code
+- tell one convergent story
+- **expect tangents**
+
+<p align="center">
+  <img src="images/data_river_eddy.png" alt="dependencies" style="width: 700px;" align="center"/>
+</p>
+
+## Traceable data flow: Expect tangents
+
+```{r, eval=FALSE}
++---01_data
+|       downloaded_data.csv
+|       
++---02_cache
+|       a_munged_data.Rds
+|       b_model_output.Rds
+|       
++---03_results
+|       report_doc.docx
+|       
++---code
+|       01_download.R
+|       02_munge.R
+|       03_model.R
+|       04_report.Rmd
+|       
+\---ideas
+    +---150911_lmer_model.R
+    |      try_mixed_mod.R
+    |
+    \---160227_facet_plot.R
+           plot_a.R
+           plot_everything.R
+```
+
+## Traceable data flow: All about dependencies
 
 <p align="center">
   <img src="images/dependencies.png" alt="dependencies" style="width: 700px;" align="center"/>
 </p>
 
-## Automated data flow
+
+## Self-contained analyses: Also about dependencies
+
+- complete dependency chain from data to reports
+- dependencies are (1) public & documented or (2) embedded
+
+<p align="center">
+  <img src="images/dependencies.png" alt="dependencies" style="width: 500px;" align="center"/>
+</p>
+
+## Self-contained analyses: Data access
+
+### Principles
+- document your data's provenance
+- script your data access
+- cache a copy, but trust the source
+
+<p align="center">
+  <img src="images/dependencies_small.png" alt="dependencies" style="width: 400px;" align="right"/>
+</p>
+
+### Methods
+- `download.file()` # http
+- `httr::GET()` # https
+- [`dataRetrieval`](https://github.com/USGS-R/dataRetrieval)
+- [`geoknife`](https://github.com/USGS-R/geoknife)
+- [`dataone`](https://github.com/DataONEorg/rdataone)
+
+### Example
+
+```{r, eval=FALSE}
+# Download & unzip the UMESC fisheries data
+url <- 'http://www.umesc.usgs.gov/data_library/fisheries/LTRM_FISH_DATA_ENTIRE.zip'
+fishzipfile <- tempfile()
+download.file(url, destfile=fishzipfile)
+unzip(fishzipfile, exdir='data', junkpaths=TRUE)
+```
+
+## Self-contained analyses: Quality control
+
+### Principles
+- expect flaws, even from the best data sources
+- preserve 'raw' data
+- script your corrections
+- document your reasons
+
+<p align="center">
+  <img src="images/dependencies_qc.png" alt="dependencies" style="width: 700px;" align="center"/>
+</p>
+
+## Self-contained analyses: Quality control
+
+### Methods
+- check your n's (`nrow()`, `length(unique())`)
+- check for outliers (`sd()`, [`sensorQC::flag()`](https://github.com/USGS-R/sensorQC))
+- check for duplicates & typos (`table()`)
+- check the timezones (`lubridate::tz()`)
+- visualize (`plot(x=lon, y=lat)`)
+
+<p align="center">
+  <img src="images/sensorqc.png" alt="sensorqc" style="width: 400px;" align="right"/>
+</p>
+
+## Self-contained analyses: Scalable modeling
+
+### Remember decomposition
+- separate the model, model manager, and configurations
+
+### Value metadata
+- model run metadata = goal + configuration + model version + summary
+- choose artifacts that will last
+
+### Value compute time & person time
+- store everything until you can't
+- pick formats that allow quick review (tables, text, and png)
+
+## Incorruptible analyses: Judicious redundancy
+
+<p align="center">
+  <img src="http://www.phdcomics.com/comics/archive/phd101212s.gif" alt="final.doc" style="width: 400px;" align="center"/>
+</p>
+
+## Incorruptible analyses: Judicious redundancy
+
+<p align="center">
+  <img src="images/dependencies.png" alt="dependencies" style="width: 500px;" align="right"/>
+</p>
+
+- one copy of data
+- one copy of results
+- never rely on the cache
+- do use the cache
+
+## Incorruptible analyses: Code versioning
+
+<p align="center">
+  <img src="images/github_history.png" alt="dependencies" style="width: 350px;" align="right"/>
+</p>
+
+### Git & GitHub
+
+- keep ALL the "final.doc"s
+- option to revert
+
+<p align="center">
+  <img src="http://swcarpentry.github.io/git-novice/fig/play-changes.svg" alt="dependencies" style="width: 350px;" align="left"/>
+</p>
+
+
+## Incorruptible analyses: Code versioning
+
+<p align="center">
+  <img src="images/github_chatdiff.png" alt="dependencies" style="width: 450px;" align="right"/>
+</p>
+
+### Benefits
+
+- collaborate on files
+- prevent conflicting changes
+- manage tasks
+- give & get help
+- conduct research openly
+
+
+## Incorruptible analyses: Automated data flow
 
 ### Needs
 
-- know the file dependency structure
+- document the file dependency structure
 - update files when their dependencies change
 - only update files when they need it
 
@@ -322,47 +485,26 @@ clean:
 	rm -f 04_report.md
 ```
 
-## Reproducible data access
+## Efficient, transparent, reproducible analyses are:
 
-- know your data's provenance
-- script your data access
-  - `download.file()`
-  - `httr::GET()`
-  - [`geoknife`](https://github.com/USGS-R/geoknife)
-  - [`dataRetrieval`](https://github.com/USGS-R/dataRetrieval)
-  - [`dataone`](https://github.com/DataONEorg/rdataone), etc.
-- cache a copy, but know it's fleeting
+<img src="images/data_river_eddy.png" alt="data_river_eddy" style="width: 350px;" align="right"/>
 
-## Reproducible quality assessment
+### Readable
+- readable code
+- traceable data flow
 
-- even highly curated data have flaws
-- check your n's - nrow, nunique
-- check for outliers
-- check for duplicates
-- preserve 'raw' data
-- script your corrections
+### Self-contained
+- complete from data to reports
+- dependencies are embedded
 
-## Scalable modeling
+<p align="top">
+  <img src="images/dependencies.png" alt="dependencies" style="width: 300px;" align="right"/>
+</p>
 
-- separate the model from the model manager
-- cache intermediate data
-- create model run metadata; prefer tables, text, and png to pdf for quick review
-- store everything until you can't
-- expect obsolescence, so save long-lived artifacts if they'll be needed
-
-## GitHub
-
-- collaboration - share files, manage conflicts
-- task management - list and discuss issues, link to code & changes
-  - (waffle & trello - prioritize issues)
-- code versioning - document changes, option to revert or checkout
-- open research is possible
+### Incorruptible
+- judicious redundancy
+- code versioning
+- automated data flow
 
 
-## Fisheries dataset
 
-http://www.umesc.usgs.gov/data_library/fisheries/fish1_query.shtml
-
-http://www.umesc.usgs.gov/data_library/fisheries/LTRM_FISH_DATA_ENTIRE.zip
-
-## Summary
