@@ -106,7 +106,7 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">09 March, 2016</p>
+            <p style="margin-top: 6px; margin-left: -2px;">10 March, 2016</p>
           </hgroup>
   </slide>
 
@@ -133,6 +133,8 @@ What is <code>geoknife</code>?
 <li>avoids reinventing the wheel for the creation and optimization of complex geoprocessing algorithms</li>
 <li>uses computing resources that are dedicated elsewhere, so geoknife operations do not have much of an impact on a local computer</li>
 </ul>
+
+<p><a href='https://github.com/USGS-R/geoknife' title=''>geoknife github page</a></p>
 
 </article></slide><slide class=''><hgroup><h2>Introduction</h2></hgroup><article  id="introduction-1" class="smaller ">
 
@@ -203,7 +205,7 @@ read more about <code>geoknife</code>:<br/>
 <p><img src="images/geoknife_stencil.png" width="20%" /></p>
 
 <ul>
-<li><code>fabric</code>: the web available gridded data to be processed</li>
+<li><code>fabric</code>: the web-available gridded data to be processed</li>
 </ul>
 
 <p><img src="images/geoknife_fabric.png" width="20%" /></p>
@@ -249,14 +251,14 @@ read more about <code>geoknife</code>:<br/>
 <p>This is kind of a a hack right now, so I am not going to show it. But suggest it <a href='https://github.com/USGS-R/geoknife/issues' title=''>here</a> if you want it.</p>
 
 <ul>
-<li>web available data (<code>webgeom</code> class) that are quickstart</li>
+<li>web-available data (<code>webgeom</code> class) that are quickstart</li>
 </ul>
 
 <pre class = 'prettyprint lang-r'>stencil = webgeom(&quot;state::New Hampshire,Wisconsin&quot;)
 stencil = webgeom(&quot;ecoregion::Colorado Plateaus,Driftless Area&quot;)</pre>
 
 <ul>
-<li>web available data (<code>webgeom</code> class) from a shapefile that you have uploaded</li>
+<li>web-available data (<code>webgeom</code> class) from a shapefile that you have uploaded</li>
 </ul>
 
 <pre class = 'prettyprint lang-r'>stencil = webgeom(geom = &quot;upload:CIDA_TEST_&quot;, attribute = &quot;Letter&quot;, 
@@ -464,6 +466,82 @@ result(job, with.units = TRUE)</pre>
 ## 4 1895-04-01 18.599571 15.556386      tmx      MEAN  degC
 ## 5 1895-05-01 22.696009 21.111172      tmx      MEAN  degC</pre>
 
+</article></slide><slide class=''><hgroup><h2>geoknife</h2></hgroup><article  id="geoknife-3" class="smaller ">
+
+<p>Processing large web-available shapefiles with <code>geoknife</code></p>
+
+<ul>
+<li>host the feature somewhere as a WFS (web feature service)<br/><img src="images/sciencebase_WFS.png" width="35%" /></li>
+<li>upload the shapefile to <a href='http://cida.usgs.gov/gdp/client/#!advanced/spatial' title=''>GDP</a><br/><img src="images/gdp_WFS.png" width="35%" /></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>geoknife</h2></hgroup><article  id="geoknife-4" class="smaller ">
+
+<p>Processing large web-available shapefiles with <code>geoknife</code></p>
+
+<ul>
+<li>host the feature somewhere as a WFS (web feature service):</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>stencil &lt;- webgeom(url = &quot;https://www.sciencebase.gov/catalogMaps/mapping/ows/54668b7ce4b04d4b7dbda52d&quot;)
+query(stencil, &quot;geoms&quot;)</pre>
+
+<pre >## [1] &quot;sb:footprint&quot;              &quot;sb:managed_wiscoNoZ_wgs84&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>geom(stencil) &lt;- &quot;sb:managed_wiscoNoZ_wgs84&quot;
+attribute(stencil) &lt;- &quot;WBDY_NAME&quot;  # note this is NOT the unique identifier for features in this WFS (&#39;WBDY_WBIC&#39; is)
+head(query(stencil, &quot;values&quot;))</pre>
+
+<pre >## [1] &quot;Grindstone Lake&quot; &quot;Peterson Lake&quot;   &quot;Perch Lake&quot;     
+## [4] &quot;Bean Lake&quot;       &quot;Green Lake&quot;      &quot;Montgomery Lake&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>geoknife</h2></hgroup><article  id="geoknife-5" class="smaller ">
+
+<p>Processing large web-available shapefiles with <code>geoknife</code></p>
+
+<ul>
+<li>upload the shapefile to <a href='http://cida.usgs.gov/gdp/client/#!advanced/spatial' title=''>GDP</a>:</li>
+<li>upload zipped shapefile using the <a href='http://cida.usgs.gov/gdp/client/#!advanced/spatial' title=''>uploader</a></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>stencil &lt;- webgeom()
+query(stencil, &quot;geoms&quot;)</pre>
+
+<pre >##  [1] &quot;sample:Alaska&quot;                  
+##  [2] &quot;upload:CIDA_TEST_&quot;              
+##  [3] &quot;sample:CONUS_Climate_Divisions&quot; 
+##  [4] &quot;derivative:CONUS_States&quot;        
+##  [5] &quot;sample:CONUS_states&quot;            
+##  [6] &quot;sample:CSC_Boundaries&quot;          
+##  [7] &quot;upload:E4_all_eco&quot;              
+##  [8] &quot;derivative:FWS_LCC&quot;             
+##  [9] &quot;sample:FWS_LCC&quot;                 
+## [10] &quot;upload:GYE_STATSGO&quot;             
+## [11] &quot;upload:GYE_STATSGO_prj&quot;         
+## [12] &quot;draw:HA&quot;                        
+## [13] &quot;derivative:wbdhu8_alb_simp&quot;     
+## [14] &quot;derivative:Level_III_Ecoregions&quot;
+## [15] &quot;derivative:NCA_Regions&quot;         
+## [16] &quot;draw:UC&quot;                        
+## [17] &quot;derivative:US_Counties&quot;         
+## [18] &quot;draw:WH&quot;                        
+## [19] &quot;upload:WilliamsD&quot;               
+## [20] &quot;upload:WilliamsDown&quot;            
+## [21] &quot;upload:climate_eco_E4&quot;          
+## [22] &quot;draw:detroit&quot;                   
+## [23] &quot;sample:nps_boundary_2013&quot;       
+## [24] &quot;sample:simplified_HUC8s&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>geom(stencil) &lt;- &quot;upload:CIDA_TEST_&quot;
+query(stencil, &quot;attributes&quot;)</pre>
+
+<pre >## [1] &quot;OBJECTID&quot; &quot;Letter&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>attribute(stencil) &lt;- &quot;Letter&quot;
+values(stencil) &lt;- c(&quot;C&quot;, &quot;I&quot;, &quot;D&quot;, &quot;A&quot;)
+# job &lt;- geoknife(stencil, &#39;daymet&#39;, wait = TRUE)
+# head(result(job))</pre>
+
 </article></slide><slide class=''><hgroup><h2>gconfig</h2></hgroup><article  id="gconfig" class="smaller ">
 
 <p>I like to toggle some default settings for knife. Those are available in the <code>gconfig()</code> function, which behaves like <code>graphics::par()</code></p>
@@ -521,37 +599,30 @@ job &lt;- geoknife(&quot;state::Wisconsin,Virginia&quot;, fabric, wait = FALSE) 
 
 <pre class = 'prettyprint lang-r'>query(webgeom(), &quot;geoms&quot;)</pre>
 
-<pre >##  [1] &quot;draw:AK_Permafrost&quot;             
-##  [2] &quot;draw:AK_permafrost_smallsubset&quot; 
-##  [3] &quot;sample:Alaska&quot;                  
-##  [4] &quot;upload:CIDA_TEST_&quot;              
-##  [5] &quot;sample:CONUS_Climate_Divisions&quot; 
-##  [6] &quot;derivative:CONUS_States&quot;        
-##  [7] &quot;sample:CONUS_states&quot;            
-##  [8] &quot;sample:CSC_Boundaries&quot;          
-##  [9] &quot;derivative:FWS_LCC&quot;             
-## [10] &quot;sample:FWS_LCC&quot;                 
-## [11] &quot;upload:GYE_STATSGO&quot;             
-## [12] &quot;upload:GYE_STATSGO_prj&quot;         
-## [13] &quot;draw:GilmoreArea_PanEvap&quot;       
-## [14] &quot;draw:HA&quot;                        
-## [15] &quot;derivative:wbdhu8_alb_simp&quot;     
-## [16] &quot;derivative:Level_III_Ecoregions&quot;
-## [17] &quot;derivative:NCA_Regions&quot;         
-## [18] &quot;draw:RedButteGate&quot;              
-## [19] &quot;draw:RedButteUpperRidge&quot;        
-## [20] &quot;draw:SLC&quot;                       
-## [21] &quot;draw:SLC_Airport&quot;               
-## [22] &quot;draw:SLC_GilmoreArea&quot;           
-## [23] &quot;draw:SLC_wRedButte&quot;             
-## [24] &quot;draw:UC&quot;                        
-## [25] &quot;derivative:US_Counties&quot;         
-## [26] &quot;draw:WH&quot;                        
-## [27] &quot;upload:WilliamsD&quot;               
-## [28] &quot;upload:WilliamsDown&quot;            
-## [29] &quot;draw:detroit&quot;                   
-## [30] &quot;sample:nps_boundary_2013&quot;       
-## [31] &quot;sample:simplified_HUC8s&quot;</pre>
+<pre >##  [1] &quot;sample:Alaska&quot;                  
+##  [2] &quot;upload:CIDA_TEST_&quot;              
+##  [3] &quot;sample:CONUS_Climate_Divisions&quot; 
+##  [4] &quot;derivative:CONUS_States&quot;        
+##  [5] &quot;sample:CONUS_states&quot;            
+##  [6] &quot;sample:CSC_Boundaries&quot;          
+##  [7] &quot;upload:E4_all_eco&quot;              
+##  [8] &quot;derivative:FWS_LCC&quot;             
+##  [9] &quot;sample:FWS_LCC&quot;                 
+## [10] &quot;upload:GYE_STATSGO&quot;             
+## [11] &quot;upload:GYE_STATSGO_prj&quot;         
+## [12] &quot;draw:HA&quot;                        
+## [13] &quot;derivative:wbdhu8_alb_simp&quot;     
+## [14] &quot;derivative:Level_III_Ecoregions&quot;
+## [15] &quot;derivative:NCA_Regions&quot;         
+## [16] &quot;draw:UC&quot;                        
+## [17] &quot;derivative:US_Counties&quot;         
+## [18] &quot;draw:WH&quot;                        
+## [19] &quot;upload:WilliamsD&quot;               
+## [20] &quot;upload:WilliamsDown&quot;            
+## [21] &quot;upload:climate_eco_E4&quot;          
+## [22] &quot;draw:detroit&quot;                   
+## [23] &quot;sample:nps_boundary_2013&quot;       
+## [24] &quot;sample:simplified_HUC8s&quot;</pre>
 
 </article></slide><slide class=''><hgroup><h2>finding things</h2></hgroup><article  id="finding-things-1" class="smaller ">
 
