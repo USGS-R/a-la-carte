@@ -22,3 +22,203 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Introduction
 
 What is `EGRET`?
+
+Exploration and Graphics for RivEr Trends (EGRET)
+
+EGRET includes statistics and graphics for streamflow history, water quality trends, and the statistical modeling algorithm Weighted Regressions on Time, Discharge, and Season (WRTDS).
+
+A very complete document can be found [HERE](http://pubs.usgs.gov/tm/04/a10/)
+
+## EGRET Installation
+
+`EGRET` is available on the CRAN repository. The CRAN version is the most stable and user-tested:
+
+```{r echo=TRUE, eval=FALSE}
+install.packages("EGRET")
+```
+
+Bug fixes and feature upgrades are vetted through a version of `EGRET` that is available on a USGS-maintained R repository. To install from that repository:
+
+```{r echo=TRUE, eval=FALSE}
+install.packages("EGRET", 
+                 repos=c("http://owi.usgs.gov/R",
+                         getOption("repos")))
+```
+
+More information can be found [here](http://owi.usgs.gov/R/gran.html).
+
+Finally, the absolute cutting-edge version of `EGRET` can be installed using the `devtools` package which pulls from GitHub:
+
+```{r echo=TRUE, eval=FALSE}
+library(devtools)
+install_github("USGS-R/EGRET")
+```
+
+## EGRET Help
+
+Once the `EGRET` package has been installed, it needs to be loaded in order to use any of the functions:
+
+```{r echo=TRUE, eval=TRUE}
+library(EGRET)
+```
+
+There is a vignette that covers the full scope of the `EGRET` package. It can be accessed with the following command:
+
+```{r echo=TRUE, eval=FALSE}
+vignette("EGRET",package = "EGRET")
+```
+
+Additionally, each function has a help file. These can be accessed by typing a question mark, followed by the function name in the R console:
+
+```{r echo=TRUE, eval=FALSE}
+?modelEstimation
+```
+
+Finally, if there are still questions that the vignette and help files don't answer, please post an issue on the `EGRET` GitHub page:
+
+<center>[https://github.com/USGS-R/EGRET/issues](https://github.com/USGS-R/EGRET/issues)</center>
+
+## Yahara Example
+
+```{r echo=TRUE, eval=FALSE}
+library(EGRET)
+
+site <- "05427718"
+pCode <- "00665"
+
+Sample <- readNWISSample(site, pCode, "1990-01-01","2016-01-01")
+Daily <- readNWISDaily(site,"00060", "1990-01-01","2016-01-01")
+INFO <- readNWISInfo(site,pCode,interactive = FALSE)
+
+eList <- mergeReport(INFO,Daily,Sample)
+eList <- modelEstimation(eList)
+
+saveRDS(eList, "eList_Yahara.rds")
+
+```
+
+
+Let's explore [HERE](http://waterdatascience.shinyapps.io/exploreEGRET)
+
+## rloadest Installation
+
+`rloadest` is NOT available on the CRAN repository. Therefore, the most stable and user-tested version is on the Geological Survey R Archive Network (GRAN). To install from that repository:
+
+```{r echo=TRUE, eval=FALSE}
+install.packages("rloadest", 
+                 repos=c("http://owi.usgs.gov/R",
+                         getOption("repos")))
+```
+
+More information can be found [here](http://owi.usgs.gov/R/gran.html).
+
+Finally, the absolute cutting-edge version of `rloadest` can be installed using the `devtools` package which pulls from GitHub:
+
+```{r echo=TRUE, eval=FALSE}
+library(devtools)
+install_github("USGS-R/rloadest")
+```
+
+## rloadest Help
+
+Once the `rloadest` package has been installed, it needs to be loaded in order to use any of the functions:
+
+```{r echo=TRUE, eval=TRUE, warning=FALSE, message=FALSE}
+library(rloadest)
+```
+
+There are several vignettes that covers the full scope of the `rloadest` package. They can be accessed with the following commands:
+
+```{r echo=TRUE, eval=FALSE}
+vignette("app1",package = "rloadest")
+vignette("app2",package = "rloadest")
+vignette("app3",package = "rloadest")
+vignette("app4",package = "rloadest")
+vignette("app5",package = "rloadest")
+vignette("app6",package = "rloadest")
+vignette("IncorporatingHysteresis",package = "rloadest")
+vignette("InstantaneousTimeStep",package = "rloadest")
+vignette("SubDailyTimeSteps",package = "rloadest")
+vignette("UsingEGRETData",package = "rloadest")
+```
+
+
+Finally, if there are still questions that the vignette and help files don't answer, please post an issue on the `rloadest` GitHub page:
+
+<center>[https://github.com/USGS-R/rloadest/issues](https://github.com/USGS-R/rloadest/issues)</center>
+
+
+## rloadest
+
+```{r echo=TRUE, eval=FALSE}
+library(rloadest)
+library(survival)
+
+Sample <- eList$Sample
+Sample <- Sample[!duplicated(Sample$Date),]
+
+loadestModel <- loadReg(Surv(ConcLow, ConcHigh, type="interval2")
+                        ~ model(9), 
+                   data = Sample, 
+                   flow = "Q", dates = "Date",
+                   flow.units="cms",
+                   conc.units="mg/l",
+                   station=eList$INFO$station.nm)
+
+```
+
+
+## Convert rloadest to EGRET output:
+
+```{r echo=TRUE, eval=FALSE}
+Daily <- eList$Daily
+Sample <- eList$Sample
+
+# Make DailyLoadest
+DailyLoadest <- Daily[,which(!(names(Daily) %in% 
+      c("ConcDay","FluxDay","FNConc","FNFlux","SE","yHat")))]
+
+concs <- predConc(loadestModel,DailyLoadest, by="day")
+flux <- predLoad(loadestModel,DailyLoadest, by="day")
+
+predictResp <- fitted(loadestModel$cfit, type='response')
+predictResp_mean <- fitted(loadestModel$cfit, type='mean')
+
+DailyLoadest$ConcDay <- concs$Conc
+DailyLoadest$FluxDay <- DailyLoadest$ConcDay*86.4*DailyLoadest$Q
+DailyLoadest$SE <- concs$Std.Err
+
+# Make SampleLoadest
+
+SampleLoadest <- Sample[,which(!(names(Sample) %in% 
+        c("yHat","SE","ConcHat")))]
+
+SampleLoadest$SE <- concs$Std.Err[
+  which(concs$Date %in% SampleLoadest$Date)]
+SampleLoadest$yHat <-predictResp
+SampleLoadest$ConcHat <- predictResp_mean
+
+eListLoadest <- as.egret(INFO, DailyLoadest, SampleLoadest)
+
+```
+
+
+## Pre-defined models
+
+Here are the other pre-defined models that can be used:
+
+Left   Center  
+------ ----------
+1      $\ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \epsilon$
+2      $\ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{\ln{Q^2}}+ \epsilon$
+3      $\ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{DecTime}+ \epsilon$
+4      $\ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{sin(2*\pi{DecTime})} + \alpha_3 cos(2*\pi{DecTime}) + \epsilon$
+5      $\ln(Load)= \alpha_0+\alpha_1{\ln{Q}} + \alpha_2{\ln{Q^2}}+\alpha_3{DecTime}+\epsilon$
+6      $\ln(Load)=\alpha_0 + \alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 sin(2\pi{DecTime})+\alpha_4 cos(2\pi{DecTime})+\epsilon$
+7      $\ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2 \sin(2\pi{DecTime})+\alpha_3 \cos(2\pi{DecTime})+\alpha_4{DecTime}+\epsilon$ 
+8      $\ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 \sin(2\pi{DecTime})+\alpha_4 \cos(2\pi{DecTime})+\alpha_5{DecTime}+\epsilon$
+9      $\ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 \sin(2\pi{DecTime})+\alpha_4 \cos(2\pi{DecTime})+\alpha_5{DecTime}+\alpha_6{DecTime}^2+\epsilon$   
+
+Where $ln{Q}$ and `DecTime`  are centered using the equations:
+$\ln{Q}=\ln(Q)-\mbox{center of } \ln(Q)$
+$DecTime=DecYear-\mbox{center of } DecYear$
