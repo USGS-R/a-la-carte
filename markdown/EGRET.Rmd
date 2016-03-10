@@ -1,0 +1,24 @@
+---
+title: "EGRET and rloadest Tutorial"
+author: "<b>USGS</b>: Laura DeCicco"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'test';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file='../EGRET.html') })
+output:
+  ioslides_presentation:
+    css: ../styles.css
+    logo: ../images/simple-shadow.png
+    smaller: yes
+    widescreen: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+
+What is `EGRET`?
