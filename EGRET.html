@@ -120,6 +120,47 @@
 
 <p>A very complete document can be found <a href='http://pubs.usgs.gov/tm/04/a10/' title=''>HERE</a></p>
 
+</article></slide><slide class=''><hgroup><h2>EGRET Installation</h2></hgroup><article  id="egret-installation" class="smaller ">
+
+<p><code>EGRET</code> is available on the CRAN repository. The CRAN version is the most stable and user-tested:</p>
+
+<pre class = 'prettyprint lang-r'>install.packages(&quot;EGRET&quot;)</pre>
+
+<p>Bug fixes and feature upgrades are vetted through a version of <code>EGRET</code> that is available on a USGS-maintained R repository. To install from that repository:</p>
+
+<pre class = 'prettyprint lang-r'>install.packages(&quot;EGRET&quot;, 
+                 repos=c(&quot;http://owi.usgs.gov/R&quot;,
+                         getOption(&quot;repos&quot;)))</pre>
+
+<p>More information can be found <a href='http://owi.usgs.gov/R/gran.html' title=''>here</a>.</p>
+
+<p>Finally, the absolute cutting-edge version of <code>EGRET</code> can be installed using the <code>devtools</code> package which pulls from GitHub:</p>
+
+<pre class = 'prettyprint lang-r'>library(devtools)
+install_github(&quot;USGS-R/EGRET&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>EGRET Help</h2></hgroup><article  id="egret-help" class="smaller ">
+
+<p>Once the <code>EGRET</code> package has been installed, it needs to be loaded in order to use any of the functions:</p>
+
+<pre class = 'prettyprint lang-r'>library(EGRET)</pre>
+
+<p>There is a vignette that covers the full scope of the <code>EGRET</code> package. It can be accessed with the following command:</p>
+
+<pre class = 'prettyprint lang-r'>vignette(&quot;EGRET&quot;,package = &quot;EGRET&quot;)</pre>
+
+<p>Additionally, each function has a help file. These can be accessed by typing a question mark, followed by the function name in the R console:</p>
+
+<pre class = 'prettyprint lang-r'>?modelEstimation</pre>
+
+<p>Finally, if there are still questions that the vignette and help files don&#39;t answer, please post an issue on the <code>EGRET</code> GitHub page:</p>
+
+<center>
+
+<a href='https://github.com/USGS-R/EGRET/issues' title=''>https://github.com/USGS-R/EGRET/issues</a>
+
+</center>
+
 </article></slide><slide class=''><hgroup><h2>Yahara Example</h2></hgroup><article  id="yahara-example" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>library(EGRET)
@@ -138,6 +179,48 @@ saveRDS(eList, &quot;eList_Yahara.rds&quot;)</pre>
 
 <p>Let&#39;s explore <a href='http://waterdatascience.shinyapps.io/exploreEGRET' title=''>HERE</a></p>
 
+</article></slide><slide class=''><hgroup><h2>rloadest Installation</h2></hgroup><article  id="rloadest-installation" class="smaller ">
+
+<p><code>rloadest</code> is NOT available on the CRAN repository. Therefore, the most stable and user-tested version is on the Geological Survey R Archive Network (GRAN). To install from that repository:</p>
+
+<pre class = 'prettyprint lang-r'>install.packages(&quot;rloadest&quot;, 
+                 repos=c(&quot;http://owi.usgs.gov/R&quot;,
+                         getOption(&quot;repos&quot;)))</pre>
+
+<p>More information can be found <a href='http://owi.usgs.gov/R/gran.html' title=''>here</a>.</p>
+
+<p>Finally, the absolute cutting-edge version of <code>rloadest</code> can be installed using the <code>devtools</code> package which pulls from GitHub:</p>
+
+<pre class = 'prettyprint lang-r'>library(devtools)
+install_github(&quot;USGS-R/rloadest&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>rloadest Help</h2></hgroup><article  id="rloadest-help" class="smaller ">
+
+<p>Once the <code>rloadest</code> package has been installed, it needs to be loaded in order to use any of the functions:</p>
+
+<pre class = 'prettyprint lang-r'>library(rloadest)</pre>
+
+<p>There are several vignettes that covers the full scope of the <code>rloadest</code> package. They can be accessed with the following commands:</p>
+
+<pre class = 'prettyprint lang-r'>vignette(&quot;app1&quot;,package = &quot;rloadest&quot;)
+vignette(&quot;app2&quot;,package = &quot;rloadest&quot;)
+vignette(&quot;app3&quot;,package = &quot;rloadest&quot;)
+vignette(&quot;app4&quot;,package = &quot;rloadest&quot;)
+vignette(&quot;app5&quot;,package = &quot;rloadest&quot;)
+vignette(&quot;app6&quot;,package = &quot;rloadest&quot;)
+vignette(&quot;IncorporatingHysteresis&quot;,package = &quot;rloadest&quot;)
+vignette(&quot;InstantaneousTimeStep&quot;,package = &quot;rloadest&quot;)
+vignette(&quot;SubDailyTimeSteps&quot;,package = &quot;rloadest&quot;)
+vignette(&quot;UsingEGRETData&quot;,package = &quot;rloadest&quot;)</pre>
+
+<p>Finally, if there are still questions that the vignette and help files don&#39;t answer, please post an issue on the <code>rloadest</code> GitHub page:</p>
+
+<center>
+
+<a href='https://github.com/USGS-R/rloadest/issues' title=''>https://github.com/USGS-R/rloadest/issues</a>
+
+</center>
+
 </article></slide><slide class=''><hgroup><h2>rloadest</h2></hgroup><article  id="rloadest" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>library(rloadest)
@@ -154,17 +237,85 @@ loadestModel &lt;- loadReg(Surv(ConcLow, ConcHigh, type=&quot;interval2&quot;)
                    conc.units=&quot;mg/l&quot;,
                    station=eList$INFO$station.nm)</pre>
 
+</article></slide><slide class=''><hgroup><h2>Convert rloadest to EGRET output:</h2></hgroup><article  id="convert-rloadest-to-egret-output" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>Daily &lt;- eList$Daily
+Sample &lt;- eList$Sample
+
+# Make DailyLoadest
+DailyLoadest &lt;- Daily[,which(!(names(Daily) %in% 
+      c(&quot;ConcDay&quot;,&quot;FluxDay&quot;,&quot;FNConc&quot;,&quot;FNFlux&quot;,&quot;SE&quot;,&quot;yHat&quot;)))]
+
+concs &lt;- predConc(loadestModel,DailyLoadest, by=&quot;day&quot;)
+flux &lt;- predLoad(loadestModel,DailyLoadest, by=&quot;day&quot;)
+
+predictResp &lt;- fitted(loadestModel$cfit, type=&#39;response&#39;)
+predictResp_mean &lt;- fitted(loadestModel$cfit, type=&#39;mean&#39;)
+
+DailyLoadest$ConcDay &lt;- concs$Conc
+DailyLoadest$FluxDay &lt;- DailyLoadest$ConcDay*86.4*DailyLoadest$Q
+DailyLoadest$SE &lt;- concs$Std.Err
+
+# Make SampleLoadest
+
+SampleLoadest &lt;- Sample[,which(!(names(Sample) %in% 
+        c(&quot;yHat&quot;,&quot;SE&quot;,&quot;ConcHat&quot;)))]
+
+SampleLoadest$SE &lt;- concs$Std.Err[
+  which(concs$Date %in% SampleLoadest$Date)]
+SampleLoadest$yHat &lt;-predictResp
+SampleLoadest$ConcHat &lt;- predictResp_mean
+
+eListLoadest &lt;- as.egret(INFO, DailyLoadest, SampleLoadest)</pre>
+
 </article></slide><slide class=''><hgroup><h2>Pre-defined models</h2></hgroup><article  id="pre-defined-models" class="smaller ">
 
-<p>Where \(ln{Q}\) and <code>DecTime</code> are centered using the equations: \[ \ln{Q}=\ln(Q)-\mbox{center of } \ln(Q) \] \[ DecTime=DecYear-\mbox{center of } DecYear \]</p>
+<p>Here are the other pre-defined models that can be used:</p>
 
-<p>Here are other predefined models that can be used:</p>
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">Left</th>
+<th align="left">Center</th>
+</tr>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">\(\ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \epsilon\)</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">\(\ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{\ln{Q^2}}+ \epsilon\)</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">\(\ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{DecTime}+ \epsilon\)</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">\(\ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{sin(2*\pi{DecTime})} + \alpha_3 cos(2*\pi{DecTime}) + \epsilon\)</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">\(\ln(Load)= \alpha_0+\alpha_1{\ln{Q}} + \alpha_2{\ln{Q^2}}+\alpha_3{DecTime}+\epsilon\)</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">\(\ln(Load)=\alpha_0 + \alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 sin(2\pi{DecTime})+\alpha_4 cos(2\pi{DecTime})+\epsilon\)</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">\(\ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2 \sin(2\pi{DecTime})+\alpha_3 \cos(2\pi{DecTime})+\alpha_4{DecTime}+\epsilon\)</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">\(\ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 \sin(2\pi{DecTime})+\alpha_4 \cos(2\pi{DecTime})+\alpha_5{DecTime}+\epsilon\)</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">\(\ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 \sin(2\pi{DecTime})+\alpha_4 \cos(2\pi{DecTime})+\alpha_5{DecTime}+\alpha_6{DecTime}^2+\epsilon\)</td>
+</tr>
+</table>
 
-<p>\[ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \epsilon \] \[ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{\ln{Q^2}}+ \epsilon \] \[ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{DecTime}+ \epsilon \] \[ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{sin(2*\pi{DecTime})} + \alpha_3 cos(2*\pi{DecTime}) + \epsilon \]</p>
-
-</article></slide><slide class=''><hgroup><h2>Pre-defined models</h2></hgroup><article  id="pre-defined-models-1" class="smaller ">
-
-<p>\[ \ln(Load)= \alpha_0+\alpha_1{\ln{Q}} + \alpha_2{\ln{Q^2}}+\alpha_3{DecTime}+\epsilon \] \[ \ln(Load)=\alpha_0 + \alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 sin(2\pi{DecTime})+\alpha_4 cos(2\pi{DecTime})+\epsilon \] \[ \ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2 \sin(2\pi{DecTime})+\alpha_3 \cos(2\pi{DecTime})+\alpha_4{DecTime}+\epsilon \] \[ \ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 \sin(2\pi{DecTime})+\alpha_4 \cos(2\pi{DecTime})+\alpha_5{DecTime}+\epsilon \] \[ \ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 \sin(2\pi{DecTime})+\alpha_4 \cos(2\pi{DecTime})+\alpha_5{DecTime}+\alpha_6{DecTime}^2+\epsilon \]</p></article></slide>
+<p>Where \(ln{Q}\) and <code>DecTime</code> are centered using the equations: \(\ln{Q}=\ln(Q)-\mbox{center of } \ln(Q)\) \(DecTime=DecYear-\mbox{center of } DecYear\)</p></article></slide>
 
 
   <slide class="backdrop"></slide>
