@@ -1,5 +1,5 @@
 ---
-title: "dataRetrival Tutorial"
+title: "dataRetrieval Tutorial"
 author: "<b>USGS</b>: Laura DeCicco"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 knit: (function(inputFile, encoding) { 
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Introduction
 
-What is `dataRetrival`?
+What is `dataRetrieval`?
 
 * R-package to get USGS/EPA water data into R
 
@@ -35,7 +35,7 @@ Where does the data come from?
     + USDA
     + more being added....
 
-What does `dataRetrival` do to the data?
+What does `dataRetrieval` do to the data?
 
 * 
 
@@ -56,7 +56,7 @@ How to discover data?
 install.packages("dataRetrieval")
 ```
 
-Bug fixes and feature upgrades are vetted through a version of `dataRetrival` that is available on a USGS-maintained R repository. To install from that repository:
+Bug fixes and feature upgrades are vetted through a version of `dataRetrieval` that is available on a USGS-maintained R repository. To install from that repository:
 
 ```{r echo=TRUE, eval=FALSE}
 install.packages("dataRetrieval", 
@@ -66,14 +66,14 @@ install.packages("dataRetrieval",
 
 More information can be found [here](http://owi.usgs.gov/R/gran.html).
 
-Finally, the absolute cutting-edge version of `dataRetrival` can be installed using the `devtools` package which pulls from GitHub:
+Finally, the absolute cutting-edge version of `dataRetrieval` can be installed using the `devtools` package which pulls from GitHub:
 
 ```{r echo=TRUE, eval=FALSE}
 library(devtools)
 install_github("USGS-R/dataRetrieval")
 ```
 
-## dataRetrival Help
+## dataRetrieval Help
 
 Once the `dataRetrieval` package has been installed, it needs to be loaded in order to use any of the functions:
 
@@ -707,7 +707,7 @@ Check the website for new features!
 
 * In R, one vector (or column in a data frame) can only have __ONE__ timezone attribute
     + Sometimes in a single state, some sites will acknowledge daylight savings and some don't
-    + `dataRetrival` queries could easily span timezones    
+    + `dataRetrieval` queries could easily span timezones    
 
 * Therefore, `dataRetrieval` converts all date/times to UTC.
 
