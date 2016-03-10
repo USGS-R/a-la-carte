@@ -38,6 +38,8 @@ The `geoknife` package was created to support web-based geoprocessing of large g
 * avoids reinventing the wheel for the creation and optimization of complex geoprocessing algorithms
 * uses computing resources that are dedicated elsewhere, so geoknife operations do not have much of an impact on a local computer
 
+[geoknife github page](https://github.com/USGS-R/geoknife)
+
 ## Introduction
 
 read more about `geoknife`:  
@@ -82,7 +84,7 @@ geoknife(stencil, fabric, knife)
 
 <img src="images/geoknife_stencil.png" width="20%" />  
 
-* `fabric`: the web available gridded data to be processed  
+* `fabric`: the web-available gridded data to be processed  
 
 <img src="images/geoknife_fabric.png" width="20%" />  
 
@@ -115,12 +117,12 @@ stencil = data.frame('point1'=c(-89, 46), 'point2'=c(-88.6, 45.2))
 
 This is kind of a a hack right now, so I am not going to show it. But suggest it [here](https://github.com/USGS-R/geoknife/issues) if you want it.
 
-* web available data (`webgeom` class) that are quickstart
+* web-available data (`webgeom` class) that are quickstart
 ```{r, echo=T, eval=F}
 stencil = webgeom('state::New Hampshire,Wisconsin')
 stencil = webgeom('ecoregion::Colorado Plateaus,Driftless Area')
 ```
-* web available data (`webgeom` class) from a shapefile that you have uploaded
+* web-available data (`webgeom` class) from a shapefile that you have uploaded
 ```{r, echo=T, eval=F}
 stencil = webgeom(geom="upload:CIDA_TEST_", attribute = "Letter", value= "C")
 ```
@@ -249,6 +251,42 @@ Using more features will yield more columns in the result:
 fabric <- webdata('prism',variables='tmx', times=c('1895-01-01','1895-05-01'))
 job <- geoknife(stencil = 'state::Wisconsin,Virginia', fabric, wait = TRUE)
 result(job, with.units = TRUE)
+```
+
+## geoknife
+Processing large web-available shapefiles with `geoknife`
+
+* host the feature somewhere as a WFS (web feature service)  
+<img src="images/sciencebase_WFS.png" width="35%" />
+* upload the shapefile to [GDP](http://cida.usgs.gov/gdp/client/#!advanced/spatial)  
+<img src="images/gdp_WFS.png" width="35%" />
+
+## geoknife
+Processing large web-available shapefiles with `geoknife`  
+
+* host the feature somewhere as a WFS (web feature service):  
+```{r, echo=T}
+stencil <- webgeom(url='https://www.sciencebase.gov/catalogMaps/mapping/ows/54668b7ce4b04d4b7dbda52d')
+query(stencil, 'geoms')
+geom(stencil) <- "sb:managed_wiscoNoZ_wgs84"
+attribute(stencil) <- "WBDY_NAME" # note this is NOT the unique identifier for features in this WFS ("WBDY_WBIC" is)
+head(query(stencil, 'values'))
+```
+
+## geoknife
+Processing large web-available shapefiles with `geoknife`  
+
+* upload the shapefile to [GDP](http://cida.usgs.gov/gdp/client/#!advanced/spatial):
+ - upload zipped shapefile using the [uploader](http://cida.usgs.gov/gdp/client/#!advanced/spatial)
+```{r, echo=T}
+stencil <- webgeom()
+query(stencil, 'geoms')
+geom(stencil) <- "upload:CIDA_TEST_"
+query(stencil, 'attributes')
+attribute(stencil) <- "Letter"
+values(stencil) <- c('C','I','D','A')
+#job <- geoknife(stencil, 'daymet', wait = TRUE)
+#head(result(job))
 ```
 
 ## gconfig
