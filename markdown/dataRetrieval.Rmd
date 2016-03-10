@@ -484,12 +484,12 @@ datatable(phWI.1[,c("site_no","station_nm","data_type_cd","begin_date","end_date
 
 ```{r echo=TRUE, eval=TRUE, message=FALSE, fig.height=4}
 library(leaflet)
-leaflet() %>% 
+leaflet(data=phWI.1) %>% 
   addProviderTiles("CartoDB.Positron") %>%
-  addCircleMarkers(phWI.1$dec_long_va,phWI.1$dec_lat_va,
+  addCircleMarkers(~dec_long_va,~dec_lat_va,
                    color = "red", radius=3, stroke=FALSE,
                    fillOpacity = 0.8, opacity = 0.8,
-                   popup=phWI.1$station_nm)
+                   popup=~station_nm)
         
 ```
     
@@ -645,7 +645,8 @@ wiSummary <- phosData %>%
 
 ```{r echo=TRUE, eval=FALSE}
 col_types <- c("darkblue","dodgerblue","green4","gold1","orange","brown","red")
-leg_vals <- unique(as.numeric(quantile(wiSummary$max, probs=c(0,0.01,0.1,0.25,0.5,0.75,0.9,.99,1), na.rm=TRUE)))
+leg_vals <- unique(as.numeric(quantile(wiSummary$max, 
+                probs=c(0,0.01,0.1,0.25,0.5,0.75,0.9,.99,1), na.rm=TRUE)))
 pal = colorBin(col_types, wiSummary$max, bins = leg_vals)
 rad <-3*seq(1,4,length.out = 16)
 wiSummary$sizes <- rad[as.numeric(cut(wiSummary$count, breaks=16))]
@@ -661,7 +662,7 @@ leaflet(data=wiSummary) %>%
             pal=pal,
             values=~max,
             opacity = 0.8,
-            labFormat = labelFormat(digits = 1), #transform = function(x) as.integer(x)),
+            labFormat = labelFormat(digits = 1), 
             title = 'Max Value')
 
 ```
@@ -694,7 +695,7 @@ leaflet(data=wiSummary) %>%
 
 ## Water Quality Portal Advise
 
-More filters is often *slower*. 
+More filters are often *slower*. 
 Bounding box queries are slow.
 
 Check the website for new features!
