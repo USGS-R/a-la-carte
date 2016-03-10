@@ -112,7 +112,59 @@
 
 <slide class=''><hgroup><h2>Introduction</h2></hgroup><article  id="introduction" class="smaller ">
 
-<p>What is <code>EGRET</code>?</p></article></slide>
+<p>What is <code>EGRET</code>?</p>
+
+<p>Exploration and Graphics for RivEr Trends (EGRET)</p>
+
+<p>EGRET includes statistics and graphics for streamflow history, water quality trends, and the statistical modeling algorithm Weighted Regressions on Time, Discharge, and Season (WRTDS).</p>
+
+<p>A very complete document can be found <a href='http://pubs.usgs.gov/tm/04/a10/' title=''>HERE</a></p>
+
+</article></slide><slide class=''><hgroup><h2>Yahara Example</h2></hgroup><article  id="yahara-example" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>library(EGRET)
+
+site &lt;- &quot;05427718&quot;
+pCode &lt;- &quot;00665&quot;
+
+Sample &lt;- readNWISSample(site, pCode, &quot;1990-01-01&quot;,&quot;2016-01-01&quot;)
+Daily &lt;- readNWISDaily(site,&quot;00060&quot;, &quot;1990-01-01&quot;,&quot;2016-01-01&quot;)
+INFO &lt;- readNWISInfo(site,pCode,interactive = FALSE)
+
+eList &lt;- mergeReport(INFO,Daily,Sample)
+eList &lt;- modelEstimation(eList)
+
+saveRDS(eList, &quot;eList_Yahara.rds&quot;)</pre>
+
+<p>Let&#39;s explore <a href='http://waterdatascience.shinyapps.io/exploreEGRET' title=''>HERE</a></p>
+
+</article></slide><slide class=''><hgroup><h2>rloadest</h2></hgroup><article  id="rloadest" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>library(rloadest)
+library(survival)
+
+Sample &lt;- eList$Sample
+Sample &lt;- Sample[!duplicated(Sample$Date),]
+
+loadestModel &lt;- loadReg(Surv(ConcLow, ConcHigh, type=&quot;interval2&quot;)
+                        ~ model(9), 
+                   data = Sample, 
+                   flow = &quot;Q&quot;, dates = &quot;Date&quot;,
+                   flow.units=&quot;cms&quot;,
+                   conc.units=&quot;mg/l&quot;,
+                   station=eList$INFO$station.nm)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Pre-defined models</h2></hgroup><article  id="pre-defined-models" class="smaller ">
+
+<p>Where \(ln{Q}\) and <code>DecTime</code> are centered using the equations: \[ \ln{Q}=\ln(Q)-\mbox{center of } \ln(Q) \] \[ DecTime=DecYear-\mbox{center of } DecYear \]</p>
+
+<p>Here are other predefined models that can be used:</p>
+
+<p>\[ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \epsilon \] \[ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{\ln{Q^2}}+ \epsilon \] \[ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{DecTime}+ \epsilon \] \[ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{sin(2*\pi{DecTime})} + \alpha_3 cos(2*\pi{DecTime}) + \epsilon \]</p>
+
+</article></slide><slide class=''><hgroup><h2>Pre-defined models</h2></hgroup><article  id="pre-defined-models-1" class="smaller ">
+
+<p>\[ \ln(Load)= \alpha_0+\alpha_1{\ln{Q}} + \alpha_2{\ln{Q^2}}+\alpha_3{DecTime}+\epsilon \] \[ \ln(Load)=\alpha_0 + \alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 sin(2\pi{DecTime})+\alpha_4 cos(2\pi{DecTime})+\epsilon \] \[ \ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2 \sin(2\pi{DecTime})+\alpha_3 \cos(2\pi{DecTime})+\alpha_4{DecTime}+\epsilon \] \[ \ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 \sin(2\pi{DecTime})+\alpha_4 \cos(2\pi{DecTime})+\alpha_5{DecTime}+\epsilon \] \[ \ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 \sin(2\pi{DecTime})+\alpha_4 \cos(2\pi{DecTime})+\alpha_5{DecTime}+\alpha_6{DecTime}^2+\epsilon \]</p></article></slide>
 
 
   <slide class="backdrop"></slide>

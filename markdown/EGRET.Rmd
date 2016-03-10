@@ -22,3 +22,72 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Introduction
 
 What is `EGRET`?
+
+Exploration and Graphics for RivEr Trends (EGRET)
+
+EGRET includes statistics and graphics for streamflow history, water quality trends, and the statistical modeling algorithm Weighted Regressions on Time, Discharge, and Season (WRTDS).
+
+A very complete document can be found [HERE](http://pubs.usgs.gov/tm/04/a10/)
+
+## Yahara Example
+
+```{r echo=TRUE, eval=FALSE}
+library(EGRET)
+
+site <- "05427718"
+pCode <- "00665"
+
+Sample <- readNWISSample(site, pCode, "1990-01-01","2016-01-01")
+Daily <- readNWISDaily(site,"00060", "1990-01-01","2016-01-01")
+INFO <- readNWISInfo(site,pCode,interactive = FALSE)
+
+eList <- mergeReport(INFO,Daily,Sample)
+eList <- modelEstimation(eList)
+
+saveRDS(eList, "eList_Yahara.rds")
+
+```
+
+
+Let's explore [HERE](http://waterdatascience.shinyapps.io/exploreEGRET)
+
+## rloadest
+
+```{r echo=TRUE, eval=FALSE}
+library(rloadest)
+library(survival)
+
+Sample <- eList$Sample
+Sample <- Sample[!duplicated(Sample$Date),]
+
+loadestModel <- loadReg(Surv(ConcLow, ConcHigh, type="interval2")
+                        ~ model(9), 
+                   data = Sample, 
+                   flow = "Q", dates = "Date",
+                   flow.units="cms",
+                   conc.units="mg/l",
+                   station=eList$INFO$station.nm)
+
+```
+
+## Pre-defined models
+
+Where $ln{Q}$ and `DecTime`  are centered using the equations:
+$$ \ln{Q}=\ln(Q)-\mbox{center of } \ln(Q) $$
+$$ DecTime=DecYear-\mbox{center of } DecYear $$
+
+Here are other predefined models that can be used:
+
+$$ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \epsilon $$
+$$ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{\ln{Q^2}}+ \epsilon $$ 
+$$ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{DecTime}+ \epsilon $$ 
+$$ \ln(Load)= \alpha_0 + \alpha_1{\ln{Q}} + \alpha_2{sin(2*\pi{DecTime})} + \alpha_3 cos(2*\pi{DecTime}) + \epsilon $$
+
+## Pre-defined models
+
+$$ \ln(Load)= \alpha_0+\alpha_1{\ln{Q}} + \alpha_2{\ln{Q^2}}+\alpha_3{DecTime}+\epsilon $$
+$$ \ln(Load)=\alpha_0 + \alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 sin(2\pi{DecTime})+\alpha_4 cos(2\pi{DecTime})+\epsilon $$
+$$ \ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2 \sin(2\pi{DecTime})+\alpha_3 \cos(2\pi{DecTime})+\alpha_4{DecTime}+\epsilon $$ 
+$$ \ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 \sin(2\pi{DecTime})+\alpha_4 \cos(2\pi{DecTime})+\alpha_5{DecTime}+\epsilon $$
+$$ \ln(Load)=\alpha_0+\alpha_1{\ln{Q}}+\alpha_2{\ln{Q^2}}+\alpha_3 \sin(2\pi{DecTime})+\alpha_4 \cos(2\pi{DecTime})+\alpha_5{DecTime}+\alpha_6{DecTime}^2+\epsilon $$   
+
