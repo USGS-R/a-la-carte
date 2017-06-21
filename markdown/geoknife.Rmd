@@ -18,7 +18,7 @@ output:
 options(width=65)
 knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)
 library(geoknife)
-gconfig(wps.url='http://cida-test.er.usgs.gov/gdp/process/WebProcessingService')
+gconfig(wps.url='https://cida-test.er.usgs.gov/gdp/process/WebProcessingService')
 ```
 
 ## Introduction
@@ -70,7 +70,7 @@ What does `geoknife` do to the data?
 How to discover datasets?
 
 * Using the `geoknife` `query()` function (examples to follow)
-* Searching the [GDP catalog](http://cida.usgs.gov/gdp/)
+* Searching the [GDP catalog](https://cida.usgs.gov/gdp/)
 * Websearches for OPeNDAP datasets (e.g., [apdrc website](http://apdrc.soest.hawaii.edu/data/data.php))
 <img src="images/apdrc_data.png" width="100%" />
 
@@ -179,7 +179,7 @@ webdata()
 ## Fabric
 You can define values for those fields when creating `webdata`:
 ```{r, echo=T}
-fabric = webdata(url = 'http://cida.usgs.gov/thredds/dodsC/prism_v2',  
+fabric = webdata(url = 'https://cida.usgs.gov/thredds/dodsC/prism_v2',  
         times = c('1990-01-01','2010-01-01'),
         variables = c('ppt','tmx'))
 fabric
@@ -258,7 +258,7 @@ Processing large web-available shapefiles with `geoknife`
 
 * host the feature somewhere as a WFS (web feature service)  
 <img src="images/sciencebase_WFS.png" width="35%" />
-* upload the shapefile to [GDP](http://cida.usgs.gov/gdp/client/#!advanced/spatial)  
+* upload the shapefile to [GDP](https://cida.usgs.gov/gdp/client/#!advanced/spatial)  
 <img src="images/gdp_WFS.png" width="35%" />
 
 ## geoknife
@@ -276,8 +276,8 @@ head(query(stencil, 'values'))
 ## geoknife
 Processing large web-available shapefiles with `geoknife`  
 
-* upload the shapefile to [GDP](http://cida.usgs.gov/gdp/client/#!advanced/spatial):
- - upload zipped shapefile using the [uploader](http://cida.usgs.gov/gdp/client/#!advanced/spatial)
+* upload the shapefile to [GDP](https://cida.usgs.gov/gdp/client/#!advanced/spatial):
+ - upload zipped shapefile using the [uploader](https://cida.usgs.gov/gdp/client/#!advanced/spatial)
 ```{r, echo=T}
 stencil <- webgeom()
 query(stencil, 'geoms')
@@ -409,5 +409,5 @@ And plotting time series data:
 
 ## geoknife for the script averse
 <p align="center">
-  <a href="http://cida.usgs.gov/gdp/"><img src="../images/GDP_screen.png" alt="Geo Data Portal" align="center" width="90%"/></a>
+  <a href="https://cida.usgs.gov/gdp/"><img src="../images/GDP_screen.png" alt="Geo Data Portal" align="center" width="90%"/></a>
 </p>
