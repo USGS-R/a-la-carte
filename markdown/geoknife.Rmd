@@ -18,8 +18,16 @@ output:
 options(width=65)
 knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)
 library(geoknife)
-gconfig(wps.url='http://cida-test.er.usgs.gov/gdp/process/WebProcessingService')
+gconfig(wps.url='https://cida-test.er.usgs.gov/gdp/process/WebProcessingService')
 ```
+
+## Who we are
+<p align="center">
+  <img src="../images/data_science.png" alt="OWI data science team" style="width: 100%;" align="center"/>
+</p>
+[OWI Data Science](https://owi.usgs.gov/datascience.html)
+<img src="../images/data_science_people.png" alt="OWI data science team" style="width: 100%;"/>
+
 
 ## Introduction
 
@@ -64,16 +72,7 @@ Where does the data come from?
 What does `geoknife` do to the data?
 
 * `geoknife` subsets and/or summarizes data on a webserver, and let's you know when it is complete
-![web workflow](images/web_workflow.png)
-
-## Introduction
-How to discover datasets?
-
-* Using the `geoknife` `query()` function (examples to follow)
-* Searching the [GDP catalog](http://cida.usgs.gov/gdp/)
-* Websearches for OPeNDAP datasets (e.g., [apdrc website](http://apdrc.soest.hawaii.edu/data/data.php))
-<img src="images/apdrc_data.png" width="100%" />
-
+![web workflow](../images/web_workflow.png)
 
 ## Overview
 geoknife concepts:
@@ -82,15 +81,15 @@ geoknife(stencil, fabric, knife)
 ```
 * `stencil`: the "feature" (lake, watershed, point, state, etc)  
 
-<img src="images/geoknife_stencil.png" width="20%" />  
+<img src="../images/geoknife_stencil.png" width="20%" />  
 
 * `fabric`: the web-available gridded data to be processed  
 
-<img src="images/geoknife_fabric.png" width="20%" />  
+<img src="../images/geoknife_fabric.png" width="20%" />  
 
 * `knife`: processing configuration  
 
-<img src="images/geoknife_knife.png" width="20%" />
+<img src="../images/geoknife_knife.png" width="20%" />
 
 ## Overview
 geoknife concepts:
@@ -99,7 +98,7 @@ geoknife(stencil, fabric, knife)
 ```
 * `geoknife` uses the `stencil`, `fabric` and `knife` to subset and/or summarize data on a webserver and deliver the result back to you. 
 
-<img src="images/summary_subset.png" width="100%" />
+<img src="../images/summary_subset.png" width="100%" />
 
 
 ## Stencil
@@ -113,9 +112,6 @@ stencil = c(-89, 46)
 ```{r, echo=T, eval=F}
 stencil = data.frame('point1'=c(-89, 46), 'point2'=c(-88.6, 45.2))
 ```
-* as a `sp::SpatialPolygons` class from a local shapefile  
-
-This is kind of a a hack right now, so I am not going to show it. But suggest it [here](https://github.com/USGS-R/geoknife/issues) if you want it.
 
 * web-available data (`webgeom` class) that are quickstart
 ```{r, echo=T, eval=F}
@@ -127,29 +123,6 @@ stencil = webgeom('ecoregion::Colorado Plateaus,Driftless Area')
 stencil = webgeom(geom="upload:CIDA_TEST_", attribute = "Letter", value= "C")
 ```
 
-## Stencil
-Note the main difference between `simplegeom` and `webgeom` is their location/reference. 
-
-* `simplegeom` is something that exists in your R environment
-* `webgeom` is a web resource, using the Web Feature Service standard
-
-In my workflows, I tend to use both: 
-
-`simplegeoms` for point collections (lon, lat)
-```{r, echo=T, eval=F}
-stencil = data.frame('point1'=c(-89, 46), 'point2'=c(-88.6, 45.2))
-```
-`webgeoms` for getting data from an existing HUC, state, or uploading a bigger more complex file to be used again and again:
-```{r, echo=T, eval=F}
-stencil = webgeom('HUC8::09020306,14060009')
-```
-BTW, `webgeom('HUC8::09020306,14060009')` is equivalent to:
-```{r, echo=T, eval=F}
-stencil = webgeom(geom = 'derivative:wbdhu8_alb_simp',  
-                  attribute = 'HUC_8',  
-                  values = c('09020306', '14060009'))
-```
-`geoknife` has some "quickstart" references that simplify syntax for common stencils and fabric
 
 ## Stencil
 `print` in R will tell you what you are working with for the different object classes:
@@ -179,7 +152,7 @@ webdata()
 ## Fabric
 You can define values for those fields when creating `webdata`:
 ```{r, echo=T}
-fabric = webdata(url = 'http://cida.usgs.gov/thredds/dodsC/prism_v2',  
+fabric = webdata(url = 'https://cida.usgs.gov/thredds/dodsC/prism_v2',  
         times = c('1990-01-01','2010-01-01'),
         variables = c('ppt','tmx'))
 fabric
@@ -257,27 +230,15 @@ result(job, with.units = TRUE)
 Processing large web-available shapefiles with `geoknife`
 
 * host the feature somewhere as a WFS (web feature service)  
-<img src="images/sciencebase_WFS.png" width="35%" />
-* upload the shapefile to [GDP](http://cida.usgs.gov/gdp/client/#!advanced/spatial)  
-<img src="images/gdp_WFS.png" width="35%" />
+<img src="../images/sciencebase_WFS.png" width="35%" />
+* upload the shapefile to [GDP](https://cida.usgs.gov/gdp/client/#!advanced/spatial)  
+<img src="../images/gdp_WFS.png" width="35%" />
 
 ## geoknife
 Processing large web-available shapefiles with `geoknife`  
 
-* host the feature somewhere as a WFS (web feature service):  
-```{r, echo=T}
-stencil <- webgeom(url='https://www.sciencebase.gov/catalogMaps/mapping/ows/54668b7ce4b04d4b7dbda52d')
-query(stencil, 'geoms')
-geom(stencil) <- "sb:managed_wiscoNoZ_wgs84"
-attribute(stencil) <- "WBDY_NAME" # note this is NOT the unique identifier for features in this WFS ("WBDY_WBIC" is)
-head(query(stencil, 'values'))
-```
-
-## geoknife
-Processing large web-available shapefiles with `geoknife`  
-
-* upload the shapefile to [GDP](http://cida.usgs.gov/gdp/client/#!advanced/spatial):
- - upload zipped shapefile using the [uploader](http://cida.usgs.gov/gdp/client/#!advanced/spatial)
+* upload the shapefile to [GDP](https://cida.usgs.gov/gdp/client/#!advanced/spatial):
+ - upload zipped shapefile using the [uploader](https://cida.usgs.gov/gdp/client/#!advanced/spatial)
 ```{r, echo=T}
 stencil <- webgeom()
 query(stencil, 'geoms')
@@ -285,8 +246,6 @@ geom(stencil) <- "upload:CIDA_TEST_"
 query(stencil, 'attributes')
 attribute(stencil) <- "Letter"
 values(stencil) <- c('C','I','D','A')
-#job <- geoknife(stencil, 'daymet', wait = TRUE)
-#head(result(job))
 ```
 
 ## gconfig
@@ -396,18 +355,9 @@ For our lake modeling activities, we use `geoknife` to create driver data for ea
 Alternatively, there are some examples in our [geoknife paper](http://onlinelibrary.wiley.com/doi/10.1111/ecog.01880/full) and our [geoknife blog post](http://www.ecography.org/blog/slicing-gridded-data-geoknife)
 
 Looking at PRISM data for ecoregion:
-<img src="images/prism_ecoregions.png" width="70%" />
-
-## geoknife in action
-
-For our lake modeling activities, we use `geoknife` to create driver data for each lake we are modeling, and also to extract land-cover data from the NLCD that is in the buffer of each lake (for wind sheltering).
-
-Alternatively, there are some examples in our [geoknife paper](http://onlinelibrary.wiley.com/doi/10.1111/ecog.01880/full) and our [geoknife blog post](http://www.ecography.org/blog/slicing-gridded-data-geoknife)
-
-And plotting time series data:
-<img src="images/prism_timeseries.png" width="80%" />
+<img src="../images/prism_ecoregions.png" width="70%" />
 
 ## geoknife for the script averse
 <p align="center">
-  <a href="http://cida.usgs.gov/gdp/"><img src="../images/GDP_screen.png" alt="Geo Data Portal" align="center" width="90%"/></a>
+  <a href="https://cida.usgs.gov/gdp/"><img src="../images/GDP_screen.png" alt="Geo Data Portal" align="center" width="90%"/></a>
 </p>
